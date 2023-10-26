@@ -16,4 +16,5 @@ MonoBehaviour:
   health: 100
   speed: 2
   lookSpeed: 5
+  jumpForce: 5
   ammoAmount: 0

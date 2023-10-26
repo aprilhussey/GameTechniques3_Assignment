@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayableCharacter : Character
 {
 	// Shared characteristics between playable characters
-	public int lookSpeed;
+	public float lookSpeed;
+	public float jumpForce;
 	public int ammoAmount;
-
 }
