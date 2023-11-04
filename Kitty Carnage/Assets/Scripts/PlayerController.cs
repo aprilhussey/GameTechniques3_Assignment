@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
 	private float speed;
 
 	// PlayableCharacter.cs varaibles
-	private float lookSpeed;
+	private float lookSensitivity;
 	private float jumpForce;
 	private int ammoAmount;
 
@@ -28,6 +29,9 @@ public class PlayerController : MonoBehaviour
 	private LayerMask groundLayer;
 	private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
 
+	private Vector2 mouseInput;
+	public Transform cameraTransform;
+
 	// Awake is called before Start
 	void Awake()
 	{
@@ -37,7 +41,7 @@ public class PlayerController : MonoBehaviour
 		speed = playerData.speed;
 
 		// Access character data - PlayableCharacter.cs
-		lookSpeed = playerData.lookSpeed;
+		lookSensitivity = playerData.lookSensitivity;
 		jumpForce = playerData.jumpForce;
 		ammoAmount = playerData.ammoAmount;
 
@@ -50,6 +54,10 @@ public class PlayerController : MonoBehaviour
 		// Subscribe to Movement action
 		inputActions.Player.Movement.performed += context => movementInput = context.ReadValue<Vector2>();
 		inputActions.Player.Movement.canceled += context => movementInput = Vector2.zero;
+
+		// Subscribe to Look action
+		inputActions.Player.Look.performed += context => mouseInput = context.ReadValue<Vector2>();
+		inputActions.Player.Look.canceled += context => mouseInput = Vector2.zero;
 
 		// Set groundLayer to the Ground layer mask
 		groundLayer = 1 << LayerMask.NameToLayer("Ground");
@@ -84,8 +92,17 @@ public class PlayerController : MonoBehaviour
 			Jump();
 		}
 
+		// Move camera based on mouse input
+		cameraTransform.Rotate(-mouseInput.y * lookSensitivity, mouseInput.x * lookSensitivity, 0);
+		cameraTransform.localEulerAngles = new Vector3(cameraTransform.localEulerAngles.x, cameraTransform.localEulerAngles.y, 0);
+
 		// Move player using velocity
-		rb.velocity = new Vector3(movementInput.x * speed, rb.velocity.y, movementInput.y * speed);
+		//rb.velocity = new Vector3(movementInput.x * speed, rb.velocity.y, movementInput.y * speed);
+		Vector3 movementDirection = new Vector3(movementInput.x, 0, movementInput.y).normalized;
+		Vector3 rotatedDirection = cameraTransform.rotation * movementDirection;
+		Vector3 movement = new Vector3(rotatedDirection.x * speed, rb.velocity.y, rotatedDirection.z * speed);
+
+		rb.velocity = movement;
 	}
 
 	void Jump()
