@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 472245023}
   m_Layer: 0
-  m_Name: Camera target
+  m_Name: Camera Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,9 +368,10 @@ GameObject:
   m_Component:
   - component: {fileID: 807552987}
   - component: {fileID: 807552986}
-  - component: {fileID: 807552988}
   - component: {fileID: 807552985}
   - component: {fileID: 807552984}
+  - component: {fileID: 807552988}
+  - component: {fileID: 807552989}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -391,6 +392,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 66a2537978a031c4abb2997f34769ec8, type: 2}
+  health: 0
+  speed: 0
   cameraTransform: {fileID: 472245023}
 --- !u!54 &807552985
 Rigidbody:
@@ -487,6 +490,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &807552989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807552981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10ffdbc6db3be74c8f999f24b941cea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

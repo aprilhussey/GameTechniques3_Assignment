@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
 
 	// Character.cs variables
 	private string id;
-	private float health;
-	private float speed;
+	[HideInInspector] public float health;
+	[HideInInspector] public float speed;
 
 	// PlayableCharacter.cs varaibles
 	private float lookSensitivity;
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 	private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
 
 	private Vector2 mouseInput;
-	public Transform cameraTransform;
+	private Transform cameraTransform;
 
 	// Awake is called before Start
 	void Awake()
@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
 		// Other variables
 		rb = GetComponent<Rigidbody>();
+		cameraTransform = transform.Find("Camera Target");
 
 		// Input actions
 		inputActions = new InputActions();
