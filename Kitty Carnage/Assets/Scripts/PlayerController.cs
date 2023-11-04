@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
 	private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
 
 	private Vector2 mouseInput;
-	private Transform cameraTransform;
+	private GameObject cameraTarget;
 
 	// Awake is called before Start
 	void Awake()
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
 		// Other variables
 		rb = GetComponent<Rigidbody>();
-		cameraTransform = transform.Find("Camera Target");
+		cameraTarget = transform.Find("Camera Target").gameObject;
 
 		// Input actions
 		inputActions = new InputActions();
@@ -93,17 +94,21 @@ public class PlayerController : MonoBehaviour
 			Jump();
 		}
 
-		// Move camera based on mouse input
-		cameraTransform.Rotate(-mouseInput.y * lookSensitivity, mouseInput.x * lookSensitivity, 0);
-		cameraTransform.localEulerAngles = new Vector3(cameraTransform.localEulerAngles.x, cameraTransform.localEulerAngles.y, 0);
-
 		// Move player using velocity
-		//rb.velocity = new Vector3(movementInput.x * speed, rb.velocity.y, movementInput.y * speed);
 		Vector3 movementDirection = new Vector3(movementInput.x, 0, movementInput.y).normalized;
-		Vector3 rotatedDirection = cameraTransform.rotation * movementDirection;
+		Vector3 rotatedDirection = cameraTarget.transform.rotation * movementDirection;
 		Vector3 movement = new Vector3(rotatedDirection.x * speed, rb.velocity.y, rotatedDirection.z * speed);
 
 		rb.velocity = movement;
+	}
+
+	void LateUpdate()
+	{
+		// Set player rotation to match mouseInput
+		transform.Rotate(0, mouseInput.x * lookSensitivity, 0);
+
+		// Set camera rotation to match mouseInput
+		cameraTarget.transform.localRotation = Quaternion.Euler(-mouseInput.y * lookSensitivity, 0, 0);
 	}
 
 	void Jump()
