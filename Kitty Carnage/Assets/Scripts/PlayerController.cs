@@ -73,11 +73,11 @@ public class PlayerController : MonoBehaviour
 		inputActions.Disable();
 	}
 
-	/*// Start is called before the first frame update
+	// Start is called before the first frame update
 	void Start()
 	{
-
-	}*/
+		GameManager.instance.HideCursor();
+	}
 
 	// Update is called once per frame
 	void Update()

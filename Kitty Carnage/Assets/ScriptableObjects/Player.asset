@@ -15,6 +15,6 @@ MonoBehaviour:
   id: player
   health: 100
   speed: 2
-  lookSensitivity: 1
+  lookSensitivity: 0.5
   jumpForce: 5
   ammoAmount: 0
