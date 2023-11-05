@@ -21,14 +21,14 @@ public class PlayerController : MonoBehaviour
 	private Rigidbody rb;
 
 	private InputActions inputActions;
-	public Vector2 movementInput = new Vector2();
+	[HideInInspector] public Vector2 movementInput = new Vector2();
 	private bool jumpInput;
 
 	private bool grounded;
 	private LayerMask groundLayer;
 	private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
 
-	private Vector2 mouseInput;
+	private Vector2 mouseInput = new Vector2();
 	private GameObject cameraTarget;
 
 	// Awake is called before Start
