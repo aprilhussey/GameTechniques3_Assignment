@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,7 +21,7 @@ public class PlayerController : MonoBehaviour
 	private Rigidbody rb;
 
 	private InputActions inputActions;
-	private Vector2 movementInput = new Vector2();
+	public Vector2 movementInput = new Vector2();
 	private bool jumpInput;
 
 	private bool grounded;
@@ -85,6 +83,7 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		Debug.Log("grounded value: " + grounded);
+		Debug.Log("movementInput: " + movementInput);
 
 		// Check if there is ground directly below the player
 		grounded = Physics.CheckSphere(transform.position, groundDistance, groundLayer);
