@@ -99,6 +99,11 @@ public class PlayerController : MonoBehaviour
 		Vector3 movement = new Vector3(rotatedDirection.x * speed, rb.velocity.y, rotatedDirection.z * speed);
 
 		rb.velocity = movement;
+
+		if (inputActions.Player.Shoot.triggered)
+		{
+			Shoot();
+		}
 	}
 
 	void LateUpdate()
@@ -114,6 +119,12 @@ public class PlayerController : MonoBehaviour
 	{
 		// Add upward force to rigidboday
 		rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+	}
+
+	void Shoot()
+	{
+		// Spawn ammo
+		// Ammo moves in direction of mouse direction
 	}
 
 	void OnDrawGizmos()
