@@ -108,11 +108,26 @@ public class PlayerController : MonoBehaviour
 
 	void LateUpdate()
 	{
-		// Set player rotation to match mouseInput
+		// Rotate player horizontally to match mouseInput
 		transform.Rotate(0, mouseInput.x * lookSensitivity, 0);
 
+		// Get current camera rotation
+		Vector3 currentCameraRotation = cameraTarget.transform.localRotation.eulerAngles;
+
+		// Calculate new vertical rotation
+		float newVerticalRotation = currentCameraRotation.x - mouseInput.y * lookSensitivity;
+
+		// Adjust the rotation value to prevent snapping
+		if (newVerticalRotation > 180)
+		{
+			newVerticalRotation -= 360;
+		}
+
+		// Clamp the vertical rotation to prevent flipping
+		newVerticalRotation = Mathf.Clamp(newVerticalRotation, -90f, 90f);
+
 		// Set camera rotation to match mouseInput
-		cameraTarget.transform.localRotation = Quaternion.Euler(-mouseInput.y * lookSensitivity, 0, 0);
+		cameraTarget.transform.localRotation = Quaternion.Euler(newVerticalRotation, currentCameraRotation.y, currentCameraRotation.z);
 	}
 
 	void Jump()
