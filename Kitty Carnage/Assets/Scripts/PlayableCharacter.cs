@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlayableCharacter : Character
 {
 	// Shared characteristics between playable characters
-	public float lookSensitivity;
+	public float followSensitivity;
+	public float aimSensitivity;
+
 	public float jumpForce;
-	public int ammoAmount;
 }
