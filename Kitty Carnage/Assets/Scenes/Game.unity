@@ -198,7 +198,7 @@ MonoBehaviour:
   debugTransform: {fileID: 1142718401}
   gunShootDistance: 20
   pfBulletProjectile: {fileID: 6668333912122254478, guid: 59ff53af6a18bae41a67e55ec0979101, type: 3}
-  spawnBulletPosition: {fileID: 64083427}
+  spawnBulletPosition: {fileID: 0}
   vfxHitGreen: {fileID: 2243766560308660624, guid: 578fe15ddaf507f49a3cf10697e95663, type: 3}
   vfxHitRed: {fileID: 2243766560308660624, guid: adcec6a961c6291449f3cafc4124d872, type: 3}
 --- !u!54 &11979899
@@ -273,7 +273,6 @@ Transform:
   m_Children:
   - {fileID: 1934447269}
   - {fileID: 1442287112}
-  - {fileID: 64083427}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &35392326
@@ -382,37 +381,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.34, y: 0.18, z: 0.28}
   m_Center: {x: 0, y: 1.07, z: 0}
---- !u!1 &64083426
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 64083427}
-  m_Layer: 0
-  m_Name: SpawnBulletPosition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &64083427
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 64083426}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0.3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 11979901}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &82302036
 GameObject:
   m_ObjectHideFlags: 0

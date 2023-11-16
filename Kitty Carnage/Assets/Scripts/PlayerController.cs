@@ -46,9 +46,6 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private float gunShootDistance = 20f;
 
-	[SerializeField] private GameObject pfBulletProjectile;
-	[SerializeField] private Transform spawnBulletPosition;
-
 	[SerializeField] private Transform vfxHitGreen;
 	[SerializeField] private Transform vfxHitRed;
 
@@ -81,7 +78,6 @@ public class PlayerController : MonoBehaviour
 		aimVirtualCamera = GameObject.Find("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
 
 		mouseWorldPosition = Vector3.zero;
-		spawnBulletPosition = transform.Find("SpawnBulletPosition").GetComponent<Transform>();
 	}
 
 	// Start is called before the first frame update
@@ -210,20 +206,7 @@ public class PlayerController : MonoBehaviour
 				//Hit something else
 				Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
 			}
-
-			//Destroy(gameObject);
 		}
-		//Vector3 aimDirection = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-		//GameObject bulletProjectile = Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
-
-		// Ignore collision with the shooter
-		/*Collider bulletProjectileCollider = bulletProjectile.GetComponent<Collider>();
-		Collider[] playerColliders = GetComponents<Collider>();
-
-		foreach (Collider playerCollider in playerColliders)
-		{
-			Physics.IgnoreCollision(bulletProjectileCollider, playerCollider);
-		}*/
 	}
 
 	void OnEnable()
