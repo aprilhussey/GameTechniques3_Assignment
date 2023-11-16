@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,22 +21,33 @@ public class PlayerController : MonoBehaviour
 	private int ammoAmount;
 
 	// Layer masks
+	private LayerMask defaultLayer;
 	private LayerMask groundLayer;
+	private LayerMask aimColliderLayers;
 
-	// Other variables
-	private Rigidbody rb;
-
+	// Input actions
 	private InputActions inputActions;
 	[HideInInspector] public Vector2 movementInput = new Vector2();
+	private Vector2 mouseInput = new Vector2();
+
+	// Cinemachine variables
+	[SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
+
+	// Other variables
+	private Rigidbody playerRigidbody;
 
 	private bool grounded;
 	private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
 
-	private Vector2 mouseInput = new Vector2();
 	private GameObject cameraTarget;
 
-	// Cinemachine variables
-	[SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
+	Vector3 mouseWorldPosition = new Vector3();
+	[SerializeField] private Transform debugTransform;
+
+	[SerializeField] private float gunShootDistance = 20f;
+
+	[SerializeField] private GameObject pfBulletProjectile;
+	[SerializeField] private Transform spawnBulletPosition;
 
 	// Awake is called before Start
 	void Awake()
@@ -53,15 +63,20 @@ public class PlayerController : MonoBehaviour
 		jumpForce = playerData.jumpForce;
 
 		// Set layer masks
+		defaultLayer = 1 << LayerMask.NameToLayer("Default");
 		groundLayer = 1 << LayerMask.NameToLayer("Ground");
+		aimColliderLayers = defaultLayer | groundLayer;
 
 		// Input actions
 		inputActions = new InputActions();
 
 		// Other variables
-		rb = GetComponent<Rigidbody>();
+		playerRigidbody = GetComponent<Rigidbody>();
 		cameraTarget = transform.Find("CameraTarget").gameObject;
 		aimVirtualCamera = GameObject.Find("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
+
+		mouseWorldPosition = Vector3.zero;
+		spawnBulletPosition = transform.Find("SpawnBulletPosition").GetComponent<Transform>();
 	}
 
 	// Start is called before the first frame update
@@ -78,7 +93,7 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		Debug.Log($"grounded value: {grounded}");
-		Debug.Log($"movementInput: { movementInput}");
+		Debug.Log($"movementInput: {movementInput}");
 
 		// Check if there is ground directly below the player
 		grounded = Physics.CheckSphere(transform.position, groundDistance, groundLayer);
@@ -86,9 +101,26 @@ public class PlayerController : MonoBehaviour
 		// Move player using velocity
 		Vector3 movementDirection = new Vector3(movementInput.x, 0, movementInput.y).normalized;
 		Vector3 rotatedDirection = cameraTarget.transform.rotation * movementDirection;
-		Vector3 movement = new Vector3(rotatedDirection.x * speed, rb.velocity.y, rotatedDirection.z * speed);
+		Vector3 movement = new Vector3(rotatedDirection.x * speed, playerRigidbody.velocity.y, rotatedDirection.z * speed);
 
-		rb.velocity = movement;
+		playerRigidbody.velocity = movement;
+
+		// Shoot
+		
+		Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+		Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+		if (Physics.Raycast(ray, out RaycastHit raycastHit, gunShootDistance, aimColliderLayers))
+		{
+			debugTransform.position = raycastHit.point;
+			mouseWorldPosition = raycastHit.point;
+		}
+		else	// Manually set distance of raycast
+		{
+			debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
+			mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
+		}
+
 	}
 
 	void LateUpdate()
@@ -109,7 +141,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		// Clamp the vertical rotation to prevent flipping
-		newVerticalRotation = Mathf.Clamp(newVerticalRotation, -90f, 90f);
+		newVerticalRotation = Mathf.Clamp(newVerticalRotation, -65f, 65f);
 
 		// Set camera rotation to match mouseInput
 		cameraTarget.transform.localRotation = Quaternion.Euler(newVerticalRotation, currentCameraRotation.y, currentCameraRotation.z);
@@ -140,7 +172,7 @@ public class PlayerController : MonoBehaviour
 		if (grounded)
 		{
 			// Add upward force to rigidboday
-			rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+			playerRigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
 		}
 	}
 
@@ -161,6 +193,17 @@ public class PlayerController : MonoBehaviour
 	{
 		// Spawn ammo
 		// Ammo moves in direction of mouse direction
+		Vector3 aimDirection = (mouseWorldPosition - spawnBulletPosition.position).normalized;
+		GameObject bulletProjectile = Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+
+		// Ignore collision with the shooter
+		Collider bulletProjectileCollider = bulletProjectile.GetComponent<Collider>();
+		Collider[] playerColliders = GetComponents<Collider>();
+
+		foreach (Collider playerCollider in playerColliders)
+		{
+			Physics.IgnoreCollision(bulletProjectileCollider, playerCollider);
+		}
 	}
 
 	void OnEnable()
