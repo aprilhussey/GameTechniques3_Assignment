@@ -49,6 +49,11 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private GameObject pfBulletProjectile;
 	[SerializeField] private Transform spawnBulletPosition;
 
+	[SerializeField] private Transform vfxHitGreen;
+	[SerializeField] private Transform vfxHitRed;
+
+	Transform hitTransform = null;
+
 	// Awake is called before Start
 	void Awake()
 	{
@@ -106,19 +111,21 @@ public class PlayerController : MonoBehaviour
 		playerRigidbody.velocity = movement;
 
 		// Shoot
-		
 		Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
 		Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+
 		if (Physics.Raycast(ray, out RaycastHit raycastHit, gunShootDistance, aimColliderLayers))
 		{
 			debugTransform.position = raycastHit.point;
 			mouseWorldPosition = raycastHit.point;
+			hitTransform = raycastHit.transform;
 		}
 		else	// Manually set distance of raycast
 		{
 			debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
 			mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
+			hitTransform = raycastHit.transform;
 		}
 
 	}
@@ -191,19 +198,32 @@ public class PlayerController : MonoBehaviour
 
 	void OnShootPerformed()
 	{
-		// Spawn ammo
-		// Ammo moves in direction of mouse direction
-		Vector3 aimDirection = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-		GameObject bulletProjectile = Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+		if (hitTransform != null)
+		{	// Hit something
+			if (hitTransform.GetComponent<BulletTarget>() != null)
+			{
+				// Hit target
+				Instantiate(vfxHitGreen, debugTransform.position, Quaternion.identity);
+			}
+			else
+			{
+				//Hit something else
+				Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
+			}
+
+			//Destroy(gameObject);
+		}
+		//Vector3 aimDirection = (mouseWorldPosition - spawnBulletPosition.position).normalized;
+		//GameObject bulletProjectile = Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
 
 		// Ignore collision with the shooter
-		Collider bulletProjectileCollider = bulletProjectile.GetComponent<Collider>();
+		/*Collider bulletProjectileCollider = bulletProjectile.GetComponent<Collider>();
 		Collider[] playerColliders = GetComponents<Collider>();
 
 		foreach (Collider playerCollider in playerColliders)
 		{
 			Physics.IgnoreCollision(bulletProjectileCollider, playerCollider);
-		}
+		}*/
 	}
 
 	void OnEnable()
