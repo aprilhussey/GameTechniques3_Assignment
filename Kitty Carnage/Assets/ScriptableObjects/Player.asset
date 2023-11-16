@@ -15,7 +15,6 @@ MonoBehaviour:
   id: player
   health: 100
   speed: 2
-  followSensitivity: 1
-  aimSensitivity: 0.5
+  followSensitivity: 0.5
+  aimSensitivity: 0.25
   jumpForce: 5
-  ammoAmount: 0

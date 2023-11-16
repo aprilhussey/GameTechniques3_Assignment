@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
 		Debug.Log($"movementInput: {movementInput}");
 
 		// Check if there is ground directly below the player
-		grounded = Physics.CheckSphere(transform.position, groundDistance, groundLayer);
+		grounded = Physics.CheckSphere(transform.position, groundDistance, groundLayer | defaultLayer);
 
 		// Move player using velocity
 		Vector3 movementDirection = new Vector3(movementInput.x, 0, movementInput.y).normalized;
