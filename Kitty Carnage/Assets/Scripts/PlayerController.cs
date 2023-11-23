@@ -93,7 +93,18 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // MOVEMENT //
+        // Rotate the player and camera based on lookInput
+        if (movementInput != Vector2.zero)
+        {
+            this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
+            cameraTarget.transform.Rotate(Vector3.right, -lookInput.y * cameraSensitivity);
+        }
 
+        // Move the player in the direction the camera is facing
+        Vector3 movementDirection = (this.transform.forward * movementInput.y + this.transform.right * movementInput.x).normalized;
+       
+        // Apply movementDirection to playerRigidbody
+        playerRigidbody.velocity = new Vector3(movementDirection.x * speed, playerRigidbody.velocity.y, movementDirection.z * speed);
         // MOVEMENT //
 
         // JUMP //
@@ -109,17 +120,40 @@ public class PlayerController : MonoBehaviour
             playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, jumpForce, playerRigidbody.velocity.z);
         }
         // JUMP //
+
+        if (aimInput)
+        {
+            cameraSensitivity = cameraAimSensitivity;
+        }
+        else
+        {
+            cameraSensitivity = cameraFollowSensitivity;
+        }
     }
 
     public void OnMovement(InputAction.CallbackContext context)
     {
-        movementInput = context.ReadValue<Vector2>();
+        if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed)
+        {
+            movementInput = context.ReadValue<Vector2>();
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            movementInput = Vector2.zero;
+        }
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        lookInput = context.ReadValue<Vector2>();
-    }
+		if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed)
+		{
+			lookInput = context.ReadValue<Vector2>();
+		}
+		else if (context.phase == InputActionPhase.Canceled)
+		{
+			lookInput = Vector2.zero;
+		}
+	}
 
     public void OnJump(InputAction.CallbackContext context)
     {
