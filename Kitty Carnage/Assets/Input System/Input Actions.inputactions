@@ -15,6 +15,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Look",
+                    "type": "PassThrough",
+                    "id": "c4a9bf13-43b7-4855-97b6-cbceb4d3576f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "81cf117c-6672-49b5-954b-8b05ac80c2d4",
@@ -33,24 +42,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Look",
-                    "type": "PassThrough",
-                    "id": "c4a9bf13-43b7-4855-97b6-cbceb4d3576f",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Interact",
-                    "type": "Button",
-                    "id": "b28f1b07-37ce-4aa8-8b2f-30dd98123c53",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Aim",
                     "type": "Button",
                     "id": "f1aa16c1-f291-45fa-b9aa-c9085374fddb",
@@ -63,6 +54,15 @@
                     "name": "Shoot",
                     "type": "Button",
                     "id": "640f9be1-351c-4ead-a363-a00a5d0bf1fa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "b28f1b07-37ce-4aa8-8b2f-30dd98123c53",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -127,28 +127,6 @@
                 },
                 {
                     "name": "",
-                    "id": "eba34634-13c3-401b-827d-92fd29774fb4",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0a171241-6df0-411a-9a93-a888a221b09a",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f885ebd7-34d3-4d93-ab48-dab729e36ce4",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -188,6 +166,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eba34634-13c3-401b-827d-92fd29774fb4",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a171241-6df0-411a-9a93-a888a221b09a",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
