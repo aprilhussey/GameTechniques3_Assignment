@@ -7,15 +7,15 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     // Player variables
-    [HideInInspector]
-    public float health;
-    [HideInInspector]
-    public float speed;
+    //[HideInInspector]
+    public float health = 100f;
+    //[HideInInspector]
+    public float speed = 2f;
 
 	[SerializeField]
-	private float jumpForce;
+	private float jumpForce = 5f;
 
-	private int ammoAmount;
+	private int ammoAmount = 0;
 
     private bool grounded;
     private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
@@ -30,8 +30,19 @@ public class PlayerController : MonoBehaviour
     private CinemachineVirtualCamera aimVirtualCamera;
 
 	private float cameraSensitivity;
-	private float cameraFollowSensitivity;  // Camera sensitivity when NOT aiming
-	private float cameraAimSensitivity;   // Camera sensitivity when aiming
+	[SerializeField]
+	[Tooltip("Camera sensitivity when NOT aiming")]
+	private float cameraFollowSensitivity = 5f;  // Camera sensitivity when NOT aiming
+	[SerializeField]
+	[Tooltip("Camera sensitivity when aiming")]
+	private float cameraAimSensitivity = 2.5f;   // Camera sensitivity when aiming
+
+	[SerializeField]
+	[Tooltip("Minimum vertical rotation of the CameraTarget gameobject")]
+	float minVerticalRotation = -80f;	// Define min rotation
+	[SerializeField]
+	[Tooltip("Maximum vertical rotation of the CameraTarget gameobject")]
+	float maxVerticalRotation = 80f;   // Define max rotation
 
 	// Layer masks
 	private LayerMask defaultLayer;
@@ -51,11 +62,6 @@ public class PlayerController : MonoBehaviour
 	// Awake is called before Start
 	void Awake()
     {
-        // Set player variables
-        health = 100f;
-        speed = 2f;
-
-        jumpForce = 5f;
         ammoAmount = 0;
 
         // Set rigidbody
@@ -66,16 +72,13 @@ public class PlayerController : MonoBehaviour
 		
         aimVirtualCamera = GameObject.Find("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
 
-		cameraFollowSensitivity = 0.5f;
-		cameraAimSensitivity = 0.25f;
-
         // Set layer mask variables
         defaultLayer = 1 << LayerMask.NameToLayer("Default");
         groundLayer = 1 << LayerMask.NameToLayer("Ground");
         aimColliderLayers = defaultLayer | groundLayer;
 
 		// Set input actions variables
-	    movementInput = Vector2.zero;
+		movementInput = Vector2.zero;
 	    lookInput = Vector2.zero;
         jumpInput = false;
         crouchInput = false;
@@ -92,24 +95,42 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // MOVEMENT //
-        // Rotate the player and camera based on lookInput
-        if (movementInput != Vector2.zero)
-        {
-            this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
-            cameraTarget.transform.Rotate(Vector3.right, -lookInput.y * cameraSensitivity);
-        }
+		// LOOK //
+		// Keep track of current rotation
+		float verticalRotation = cameraTarget.transform.localEulerAngles.x;
 
-        // Move the player in the direction the camera is facing
-        Vector3 movementDirection = (this.transform.forward * movementInput.y + this.transform.right * movementInput.x).normalized;
+		// Rotate the player and camera based on lookInput
+		if (lookInput != Vector2.zero)
+        {
+			// Calculate new rotation
+			float newVerticalRotation = verticalRotation - lookInput.y * cameraSensitivity;
+
+			// Adjust for 360 degree system
+			if (newVerticalRotation > 180) newVerticalRotation -= 360;
+
+			// Clamp rotation to min and max angles
+			verticalRotation = Mathf.Clamp(newVerticalRotation, minVerticalRotation, maxVerticalRotation);
+
+			// Apply rotation
+			cameraTarget.transform.localEulerAngles = new Vector3(verticalRotation, 0, 0);
+
+			this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
+            //cameraTarget.transform.Rotate(Vector3.right, -lookInput.y * cameraSensitivity);
+        }
+		// LOOK //
+
+		// MOVEMENT //
+		// Move the player in the direction the camera is facing
+		Vector3 movementDirection = (this.transform.forward * movementInput.y + this.transform.right * movementInput.x).normalized;
        
         // Apply movementDirection to playerRigidbody
         playerRigidbody.velocity = new Vector3(movementDirection.x * speed, playerRigidbody.velocity.y, movementDirection.z * speed);
-        // MOVEMENT //
+		playerRigidbody.angularVelocity = Vector3.zero;
+		// MOVEMENT //
 
-        // JUMP //
-        // Check if there is ground directly below the player
-        grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
+		// JUMP //
+		// Check if there is ground directly below the player
+		grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
 
         if (jumpInput && grounded)  // If the jump action has been triggered and the player is grounded
         {
@@ -123,11 +144,11 @@ public class PlayerController : MonoBehaviour
 
         if (aimInput)
         {
-            cameraSensitivity = cameraAimSensitivity;
-        }
+            cameraSensitivity = cameraAimSensitivity / 10;  // Divided by 10 to get the correct value
+		}
         else
         {
-            cameraSensitivity = cameraFollowSensitivity;
+            cameraSensitivity = cameraFollowSensitivity / 10;	// Divided by 10 to get the correct value
         }
     }
 
