@@ -59,6 +59,21 @@ public class PlayerController : MonoBehaviour
 	private bool shootInput;
     private bool aimInput;
 
+	// Other variables
+	Vector3 mouseWorldPosition = new Vector3();
+	[SerializeField]
+	private Transform debugTransform;
+
+	[SerializeField]
+	private float gunShootDistance = 20f;
+
+	[SerializeField]
+	private Transform vfxHitGreen;
+	[SerializeField]
+	private Transform vfxHitRed;
+
+	private Transform hitTransform = null;
+
 	// Awake is called before Start
 	void Awake()
     {
@@ -84,13 +99,19 @@ public class PlayerController : MonoBehaviour
         crouchInput = false;
 	    shootInput = false;
         aimInput = false;
-    }
+
+		// Set other varibles
+		mouseWorldPosition = Vector3.zero;
+	}
 
 	// Start is called before the first frame update
 	void Start()
     {
-        
-    }
+		GameManager.instance.HideCursor();
+
+		// Set aimVirtualCamera to false when loaded
+		aimVirtualCamera.gameObject.SetActive(false);
+	}
 
     // Update is called once per frame
     void FixedUpdate()
@@ -117,7 +138,6 @@ public class PlayerController : MonoBehaviour
 			this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
             //cameraTarget.transform.Rotate(Vector3.right, -lookInput.y * cameraSensitivity);
         }
-		// LOOK //
 
 		// MOVEMENT //
 		// Move the player in the direction the camera is facing
@@ -126,7 +146,6 @@ public class PlayerController : MonoBehaviour
         // Apply movementDirection to playerRigidbody
         playerRigidbody.velocity = new Vector3(movementDirection.x * speed, playerRigidbody.velocity.y, movementDirection.z * speed);
 		playerRigidbody.angularVelocity = Vector3.zero;
-		// MOVEMENT //
 
 		// JUMP //
 		// Check if there is ground directly below the player
@@ -140,17 +159,54 @@ public class PlayerController : MonoBehaviour
             // Set the vertical velocity directly for a consistent jump height
             playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, jumpForce, playerRigidbody.velocity.z);
         }
-        // JUMP //
 
+		// AIM //
         if (aimInput)
         {
             cameraSensitivity = cameraAimSensitivity / 10;  // Divided by 10 to get the correct value
+			aimVirtualCamera.gameObject.SetActive(true);
 		}
         else
         {
-            cameraSensitivity = cameraFollowSensitivity / 10;	// Divided by 10 to get the correct value
-        }
-    }
+            cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
+			aimVirtualCamera.gameObject.SetActive(false);
+		}
+
+		// SHOOT //
+		Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+		Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+
+		if (Physics.Raycast(ray, out RaycastHit raycastHit, gunShootDistance, aimColliderLayers))
+		{
+			debugTransform.position = raycastHit.point;
+			mouseWorldPosition = raycastHit.point;
+			hitTransform = raycastHit.transform;
+		}
+		else    // Manually set distance of raycast
+		{
+			debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
+			mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
+			hitTransform = raycastHit.transform;
+		}
+
+		if (shootInput)
+		{
+			if (hitTransform != null)
+			{   // Hit something
+				if (hitTransform.GetComponent<BulletTarget>() != null)
+				{
+					// Hit target
+					Instantiate(vfxHitGreen, debugTransform.position, Quaternion.identity);
+				}
+				else
+				{
+					//Hit something else
+					Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
+				}
+			}
+		}
+	}
 
     public void OnMovement(InputAction.CallbackContext context)
     {
@@ -189,7 +245,7 @@ public class PlayerController : MonoBehaviour
 	public void OnShoot(InputAction.CallbackContext context)
     {
         shootInput = context.action.triggered;
-    }
+	}
 
 	public void OnAim(InputAction.CallbackContext context)
 	{

@@ -383,9 +383,13 @@ MonoBehaviour:
   aimVirtualCamera: {fileID: 0}
   cameraFollowSensitivity: 5
   cameraAimSensitivity: 2.5
-  minVerticalRotation: -80
+  minVerticalRotation: -40
   maxVerticalRotation: 80
   movementInput: {x: 0, y: 0}
+  debugTransform: {fileID: 1142718401}
+  gunShootDistance: 20
+  vfxHitGreen: {fileID: 2243766560308660624, guid: 578fe15ddaf507f49a3cf10697e95663, type: 3}
+  vfxHitRed: {fileID: 2243766560308660624, guid: adcec6a961c6291449f3cafc4124d872, type: 3}
 --- !u!1 &35392326
 GameObject:
   m_ObjectHideFlags: 0
@@ -5437,6 +5441,7 @@ GameObject:
   - component: {fileID: 1976165443}
   - component: {fileID: 1976165442}
   - component: {fileID: 1976165441}
+  - component: {fileID: 1976165445}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -5530,6 +5535,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1976165445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976165440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d671c376d58fea44a55fcc2819fa900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1988317636
 GameObject:
   m_ObjectHideFlags: 0
