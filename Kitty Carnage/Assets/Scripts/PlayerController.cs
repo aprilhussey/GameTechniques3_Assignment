@@ -7,9 +7,7 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     // Player variables
-    //[HideInInspector]
     public float health = 100f;
-    //[HideInInspector]
     public float speed = 2f;
 
 	[SerializeField]
@@ -52,12 +50,7 @@ public class PlayerController : MonoBehaviour
     // Input actions variables
     [HideInInspector]
     public Vector2 movementInput;
-
     private Vector2 lookInput;
-	private bool jumpInput;
-	private bool crouchInput;
-	private bool shootInput;
-    private bool aimInput;
 
 	// Other variables
 	Vector3 mouseWorldPosition = new Vector3();
@@ -95,10 +88,6 @@ public class PlayerController : MonoBehaviour
 		// Set input actions variables
 		movementInput = Vector2.zero;
 	    lookInput = Vector2.zero;
-        jumpInput = false;
-        crouchInput = false;
-	    shootInput = false;
-        aimInput = false;
 
 		// Set other varibles
 		mouseWorldPosition = Vector3.zero;
@@ -111,6 +100,7 @@ public class PlayerController : MonoBehaviour
 
 		// Set aimVirtualCamera to false when loaded
 		aimVirtualCamera.gameObject.SetActive(false);
+		cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
 	}
 
     // Update is called once per frame
@@ -127,19 +117,20 @@ public class PlayerController : MonoBehaviour
 			float newVerticalRotation = verticalRotation - lookInput.y * cameraSensitivity;
 
 			// Adjust for 360 degree system
-			if (newVerticalRotation > 180) newVerticalRotation -= 360;
+			if (newVerticalRotation > 180)
+			{
+				newVerticalRotation -= 360;
+			}
 
 			// Clamp rotation to min and max angles
 			verticalRotation = Mathf.Clamp(newVerticalRotation, minVerticalRotation, maxVerticalRotation);
 
 			// Apply rotation
 			cameraTarget.transform.localEulerAngles = new Vector3(verticalRotation, 0, 0);
-
 			this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
-            //cameraTarget.transform.Rotate(Vector3.right, -lookInput.y * cameraSensitivity);
         }
 
-		// MOVEMENT //
+		// MOVEMENT//
 		// Move the player in the direction the camera is facing
 		Vector3 movementDirection = (this.transform.forward * movementInput.y + this.transform.right * movementInput.x).normalized;
        
@@ -147,30 +138,8 @@ public class PlayerController : MonoBehaviour
         playerRigidbody.velocity = new Vector3(movementDirection.x * speed, playerRigidbody.velocity.y, movementDirection.z * speed);
 		playerRigidbody.angularVelocity = Vector3.zero;
 
-		// JUMP //
 		// Check if there is ground directly below the player
 		grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
-
-        if (jumpInput && grounded)  // If the jump action has been triggered and the player is grounded
-        {
-			// Add upward force to rigidboday
-			//playerRigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-            
-            // Set the vertical velocity directly for a consistent jump height
-            playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, jumpForce, playerRigidbody.velocity.z);
-        }
-
-		// AIM //
-        if (aimInput)
-        {
-            cameraSensitivity = cameraAimSensitivity / 10;  // Divided by 10 to get the correct value
-			aimVirtualCamera.gameObject.SetActive(true);
-		}
-        else
-        {
-            cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
-			aimVirtualCamera.gameObject.SetActive(false);
-		}
 
 		// SHOOT //
 		Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -188,23 +157,6 @@ public class PlayerController : MonoBehaviour
 			debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
 			mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
 			hitTransform = raycastHit.transform;
-		}
-
-		if (shootInput)
-		{
-			if (hitTransform != null)
-			{   // Hit something
-				if (hitTransform.GetComponent<BulletTarget>() != null)
-				{
-					// Hit target
-					Instantiate(vfxHitGreen, debugTransform.position, Quaternion.identity);
-				}
-				else
-				{
-					//Hit something else
-					Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
-				}
-			}
 		}
 	}
 
@@ -234,21 +186,46 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        jumpInput = context.action.triggered;
+        if (grounded)  // If the player is grounded
+		{
+			// Set the vertical velocity directly for a consistent jump height
+			playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, jumpForce, playerRigidbody.velocity.z);
+		}
 	}
 
 	public void OnCrouch(InputAction.CallbackContext context)
 	{
-		crouchInput = context.action.triggered;
+		
 	}
 
 	public void OnShoot(InputAction.CallbackContext context)
     {
-        shootInput = context.action.triggered;
+        if (hitTransform != null)
+		{   // Hit something
+			if (hitTransform.GetComponent<BulletTarget>() != null)
+			{
+				// Hit target
+				Instantiate(vfxHitGreen, debugTransform.position, Quaternion.identity);
+			}
+			else
+			{
+				// Hit something else
+				Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
+			}
+		}
 	}
 
 	public void OnAim(InputAction.CallbackContext context)
 	{
-		aimInput = context.action.triggered;
+		if (context.action.triggered)
+		{
+			cameraSensitivity = cameraAimSensitivity / 10;  // Divided by 10 to get the correct value
+			aimVirtualCamera.gameObject.SetActive(true);
+		}
+		else
+		{
+			cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
+			aimVirtualCamera.gameObject.SetActive(false);
+		}
 	}
 }
