@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	private float jumpForce = 5f;
 
-	private int ammoAmount = 0;
-
     private bool grounded;
     private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
 	
@@ -70,8 +68,6 @@ public class PlayerController : MonoBehaviour
 	// Awake is called before Start
 	void Awake()
     {
-        ammoAmount = 0;
-
         // Set rigidbody
         playerRigidbody = GetComponent<Rigidbody>();
 
