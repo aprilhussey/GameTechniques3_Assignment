@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "RangedWeapon", menuName = "Scriptable Objects/Weapons/Ranged Weapon")]
 public class RangedWeaponData : WeaponData, IReloadable
 {
 	[Tooltip("What type of ammo this weapon uses")]
