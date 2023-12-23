@@ -67,7 +67,12 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	private Transform vfxHitRed;
 
-	private Transform hitTransform = null;
+	//private Transform hitTransform = null;
+
+	[SerializeField]
+	private GameObject projectilePrefab;
+	[SerializeField]
+	private Transform spawnProjectilePosition;
 
 	// Awake is called before Start
 	void Awake()
@@ -96,7 +101,13 @@ public class PlayerController : MonoBehaviour
 		equippedItemR = this.GetComponentInChildren<EquippedItemR>().gameObject;
 
 		weapon = equippedItemR.GetComponentInChildren<Weapon>();
-		weaponRange = weapon.range;
+
+		if (weapon != null)
+		{
+			weaponRange = weapon.range;
+		}
+
+		spawnProjectilePosition = this.GetComponentInChildren<SpawnProjectilePosition>().gameObject.transform;
 	}
 
 	// Start is called before the first frame update
@@ -150,7 +161,7 @@ public class PlayerController : MonoBehaviour
 		// SHOOT //
 		if (weapon != null)	// If there is a weapon equipped
 		{
-			Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
 			Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
 
@@ -158,13 +169,13 @@ public class PlayerController : MonoBehaviour
 			{
 				debugTransform.position = raycastHit.point;
 				mouseWorldPosition = raycastHit.point;
-				hitTransform = raycastHit.transform;
+				//hitTransform = raycastHit.transform;
 			}
 			else    // Manually set distance of raycast
 			{
 				debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
 				mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
-				hitTransform = raycastHit.transform;
+				//hitTransform = raycastHit.transform;
 			}
 		}
 	}
@@ -209,7 +220,7 @@ public class PlayerController : MonoBehaviour
 
 	public void OnShoot(InputAction.CallbackContext context)
     {
-        if (hitTransform != null)
+		/*if (hitTransform != null)
 		{   // Hit something
 			if (hitTransform.GetComponent<BulletTarget>() != null)
 			{
@@ -221,6 +232,21 @@ public class PlayerController : MonoBehaviour
 				// Hit something else
 				Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
 			}
+		}*/
+		GameObject projectilePrefab = weapon.projectilePrefab;
+
+		// Spawn projectile
+		// Projectile moves in direction of mouse direction
+		Vector3 aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
+		GameObject projectile = Instantiate(projectilePrefab, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+
+		// Ignore collision with the shooter
+		Collider projectileCollider = projectile.GetComponent<Collider>();
+		Collider[] playerColliders = GetComponents<Collider>();
+
+		foreach (Collider playerCollider in playerColliders)
+		{
+			Physics.IgnoreCollision(projectileCollider, playerCollider);
 		}
 	}
 

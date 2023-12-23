@@ -7,6 +7,7 @@ public class RangedWeaponData : WeaponData, IReloadable
 {
 	[Tooltip("What type of ammo this weapon uses")]
 	public GameObject projectilePrefab;
+
 	public int loadedAmmo;
 	public int spareAmmo;
 	

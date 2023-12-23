@@ -13,7 +13,8 @@ public class Weapon : MonoBehaviour
 	private float rateOfUse;
 
 	// RangedWeaponData varaibles
-	private GameObject projectilePrefab;
+	[HideInInspector]
+	public GameObject projectilePrefab;
 	private int loadedAmmo;
 	private int spareAmmo;
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   damage: 50
   range: 20
   rateOfUse: 0
-  projectilePrefab: {fileID: 1859234679933314, guid: 4700ce61fd21e32439977dd4e8211f37, type: 3}
+  projectilePrefab: {fileID: 1859234679933314, guid: 76065938a0eaf9f479067b25d8c5f713, type: 3}
   loadedAmmo: 1
   spareAmmo: 0
   magazineSize: 1
