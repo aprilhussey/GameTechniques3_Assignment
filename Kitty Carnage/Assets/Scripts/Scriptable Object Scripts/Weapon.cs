@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
 	public WeaponData weaponData;
 
 	// WeaponData varaibles
-	private GameObject weaponPrefab;
 	private float damage;
-	private float range;
+	[HideInInspector]
+	public float range;
 	private float rateOfUse;
 
 	// RangedWeaponData varaibles
-	private GameObject ammoPrefab;
+	private GameObject projectilePrefab;
 	private int loadedAmmo;
 	private int spareAmmo;
 
@@ -27,7 +27,6 @@ public abstract class Weapon : MonoBehaviour
 	void Awake()
 	{
 		// Set WeaponData varaibles
-		weaponPrefab = weaponData.weaponPrefab;
 		damage = weaponData.damage;
 		range = weaponData.range;
 		rateOfUse = weaponData.rateOfUse;
@@ -37,7 +36,7 @@ public abstract class Weapon : MonoBehaviour
 			RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
 
 			// Set RangedWeaponData varaibles
-			ammoPrefab = rangedWeaponData.ammoPrefab;
+			projectilePrefab = rangedWeaponData.projectilePrefab;
 			loadedAmmo = rangedWeaponData.loadedAmmo;
 			spareAmmo = rangedWeaponData.spareAmmo;
 

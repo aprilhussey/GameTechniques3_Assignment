@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class WeaponData : ScriptableObject
 {
 	// Shared characteristics between all weapons
-	public GameObject weaponPrefab;
 	public float damage;
 	public float range;
 	public float rateOfUse;

@@ -55,8 +55,12 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	private Transform debugTransform;
 
-	[SerializeField]
-	private float gunShootDistance = 20f;
+	//[SerializeField]
+	private GameObject equippedItemL;
+	private GameObject equippedItemR;
+
+	private Weapon weapon;
+	private float weaponRange;
 
 	[SerializeField]
 	private Transform vfxHitGreen;
@@ -87,6 +91,12 @@ public class PlayerController : MonoBehaviour
 
 		// Set other varibles
 		mouseWorldPosition = Vector3.zero;
+
+		equippedItemL = this.GetComponentInChildren<EquippedItemL>().gameObject;
+		equippedItemR = this.GetComponentInChildren<EquippedItemR>().gameObject;
+
+		weapon = equippedItemR.GetComponentInChildren<Weapon>();
+		weaponRange = weapon.range;
 	}
 
 	// Start is called before the first frame update
@@ -138,21 +148,24 @@ public class PlayerController : MonoBehaviour
 		grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
 
 		// SHOOT //
-		Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-
-		Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-
-		if (Physics.Raycast(ray, out RaycastHit raycastHit, gunShootDistance, aimColliderLayers))
+		if (weapon != null)	// If there is a weapon equipped
 		{
-			debugTransform.position = raycastHit.point;
-			mouseWorldPosition = raycastHit.point;
-			hitTransform = raycastHit.transform;
-		}
-		else    // Manually set distance of raycast
-		{
-			debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
-			mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * gunShootDistance;
-			hitTransform = raycastHit.transform;
+			Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+			Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+
+			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, aimColliderLayers))
+			{
+				debugTransform.position = raycastHit.point;
+				mouseWorldPosition = raycastHit.point;
+				hitTransform = raycastHit.transform;
+			}
+			else    // Manually set distance of raycast
+			{
+				debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
+				mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
+				hitTransform = raycastHit.transform;
+			}
 		}
 	}
 
