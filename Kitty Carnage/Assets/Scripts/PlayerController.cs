@@ -7,8 +7,12 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour, IDamageable
 {
     // Player variables
-    public float health = 100f;
-    public float speed = 2f;
+    public float maxHealth = 100f;
+	private float currentHealth;
+
+	private HealthBar healthBar;
+
+	public float speed = 2f;
 
 	[SerializeField]
 	private float jumpForce = 5f;
@@ -55,7 +59,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField]
 	private Transform debugTransform;
 
-	//[SerializeField]
 	private GameObject equippedItemL;
 	private GameObject equippedItemR;
 
@@ -69,9 +72,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	//private Transform hitTransform = null;
 
-	//[SerializeField]
-	//private GameObject projectilePrefab;
-
 	// Variables used by Weapon class
 	[HideInInspector]
 	public Vector3 aimDirection;
@@ -81,6 +81,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Awake is called before Start
 	void Awake()
     {
+		// Set health
+		currentHealth = maxHealth;
+		healthBar = this.GetComponentInChildren<HealthBar>();
+
         // Set rigidbody
         playerRigidbody = GetComponent<Rigidbody>();
 
@@ -119,6 +123,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
 		GameManager.instance.HideCursor();
 
+		healthBar.SetMaxHealth(maxHealth);
+
 		// Set aimVirtualCamera to false when loaded
 		aimVirtualCamera.gameObject.SetActive(false);
 		cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
@@ -127,7 +133,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Update is called once per frame
 	void Update()
 	{
-		if (health <= 0)
+        if (currentHealth <= 0)
 		{
 			Debug.Log($"Player died");
 			//Destroy(gameObject);
@@ -255,6 +261,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void TakeDamage(float amount)
 	{
-		health -= amount;
+		if (currentHealth > 0)
+		{
+			currentHealth -= amount;
+			healthBar.SetHealth(currentHealth);
+		}
 	}
 }
