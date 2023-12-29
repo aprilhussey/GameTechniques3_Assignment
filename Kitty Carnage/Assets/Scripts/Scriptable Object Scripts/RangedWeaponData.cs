@@ -28,6 +28,10 @@ public class RangedWeaponData : WeaponData, IReloadable
 		Vector3 aimDirection = playerController.aimDirection;
 
 		GameObject projectile = Instantiate(projectilePrefab, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+		
+		// Set Damage of projectile
+		Projectile projectileProjectile = projectile.GetComponent<Projectile>();
+		projectileProjectile.Damage = damage;
 
 		// Ignore collision with the shooter
 		Collider projectileCollider = projectile.GetComponent<Collider>();

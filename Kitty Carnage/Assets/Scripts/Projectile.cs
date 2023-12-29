@@ -14,6 +14,8 @@ public class Projectile : MonoBehaviour
 	[Tooltip("How far the projectile can travel before it is destroyed")]
 	private float range = 10f;
 
+	public float Damage { get; set; }
+
 	// Awake is called before Start
 	void Awake()
 	{
@@ -38,7 +40,14 @@ public class Projectile : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log($"{gameObject.name} collided with {other.name}");
 		Destroy(gameObject);
+
+		IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
+
+		if (damageable != null)
+		{
+			damageable.TakeDamage(Damage);
+		}
+		
 	}
 }

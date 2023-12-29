@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     // Player variables
     public float health = 100f;
@@ -124,7 +124,17 @@ public class PlayerController : MonoBehaviour
 		cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
 	}
 
-    // Update is called once per frame
+	// Update is called once per frame
+	void Update()
+	{
+		if (health <= 0)
+		{
+			Debug.Log($"Player died");
+			//Destroy(gameObject);
+		}
+	}
+
+	// FixedUpdate is called at a fixed interval in sync with the physics system
     void FixedUpdate()
     {
 		// LOOK //
@@ -241,5 +251,10 @@ public class PlayerController : MonoBehaviour
 			cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
 			aimVirtualCamera.gameObject.SetActive(false);
 		}
+	}
+
+	public void TakeDamage(float amount)
+	{
+		health -= amount;
 	}
 }
