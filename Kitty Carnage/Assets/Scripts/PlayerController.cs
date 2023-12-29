@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -78,6 +79,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[HideInInspector]
 	public Transform spawnProjectilePosition;
 
+	// Ammo visuals
+	[SerializeField]
+	private TextMeshProUGUI tmpLoadedAmmo;
+	[SerializeField]
+	private TextMeshProUGUI tmpSpareAmmo;
+
 	// Awake is called before Start
 	void Awake()
     {
@@ -128,6 +135,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 		// Set aimVirtualCamera to false when loaded
 		aimVirtualCamera.gameObject.SetActive(false);
 		cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
+
+		tmpLoadedAmmo.text = weapon.loadedAmmo.ToString();
+		tmpSpareAmmo.text = weapon.spareAmmo.ToString();
 	}
 
 	// Update is called once per frame
@@ -137,6 +147,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			Debug.Log($"Player died");
 			//Destroy(gameObject);
+		}
+		// If loaded ammo text is NOT the same as the loaded ammo on the weapon
+		if (tmpLoadedAmmo.text != weapon.loadedAmmo.ToString())
+		{
+			// Update loaded ammo text to be the same as the loaded ammo on the weapon
+			tmpLoadedAmmo.text = weapon.loadedAmmo.ToString();
+		}
+
+		// If spare ammo text is NOT the same as the spare ammo on the weapon
+		if (tmpSpareAmmo.text != weapon.spareAmmo.ToString())
+		{
+			// Update spare ammo text to be the same as the spare ammo on the weapon
+			tmpSpareAmmo.text = weapon.spareAmmo.ToString();
 		}
 	}
 

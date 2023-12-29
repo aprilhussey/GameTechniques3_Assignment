@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -15,11 +16,15 @@ public class Weapon : MonoBehaviour
 	// RangedWeaponData varaibles
 	[HideInInspector]
 	public GameObject projectilePrefab;
-	private int loadedAmmo;
-	private int spareAmmo;
+	[HideInInspector]
+	public int loadedAmmo;
+	[HideInInspector]
+	public int spareAmmo;
 
-	private int magazineSize;
-	private int maxMagazineAmount;
+	[HideInInspector]
+	public int magazineSize;
+	[HideInInspector]
+	public int maxMagazineAmount;
 
 	private float reloadTime;
 	private bool needsReloading;
@@ -51,14 +56,35 @@ public class Weapon : MonoBehaviour
 		}
 
 		playerController = this.GetComponentInParent<PlayerController>();
-}
+	}
+
+	void Update()
+	{
+        if (loadedAmmo <= 0)
+        {
+			Debug.Log($"Weapon needs reloading");
+			needsReloading = true;
+        }
+		else
+		{
+			needsReloading = false;
+		}
+    }
 
 	public void UseWeapon()
 	{
-		if (weaponData is RangedWeaponData)
+		// Check if weapon needs reloading
+		if (needsReloading)
 		{
-			RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
-			rangedWeaponData.Use(this, playerController);
+			return;
+		}
+		else
+		{
+			if (weaponData is RangedWeaponData)
+			{
+				RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
+				rangedWeaponData.Use(this, ref playerController);
+			}
 		}
 	}
 
@@ -67,7 +93,15 @@ public class Weapon : MonoBehaviour
 		if (weaponData is RangedWeaponData)
 		{
 			RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
+			StartCoroutine(ReloadCoroutine(reloadTime));
 			rangedWeaponData.Reload(this);
 		}
+	}
+
+	private IEnumerator ReloadCoroutine(float reloadTime)
+	{
+		needsReloading = true;
+		yield return new WaitForSeconds(reloadTime);
+		needsReloading = false;
 	}
 }

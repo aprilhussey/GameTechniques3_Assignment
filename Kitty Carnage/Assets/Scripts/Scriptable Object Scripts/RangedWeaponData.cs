@@ -22,7 +22,7 @@ public class RangedWeaponData : WeaponData, IReloadable
 	[HideInInspector]
 	public bool needsReloading = false;
 
-	public override void Use(Weapon weapon, PlayerController playerController)
+	public override void Use(Weapon weapon, ref PlayerController playerController)
 	{
 		Transform spawnProjectilePosition = playerController.spawnProjectilePosition;
 		Vector3 aimDirection = playerController.aimDirection;
@@ -45,6 +45,15 @@ public class RangedWeaponData : WeaponData, IReloadable
 
 	public void Reload(Weapon weapon)
 	{
+		if (weapon.spareAmmo >= weapon.magazineSize)
+		{
+			weapon.spareAmmo -= weapon.magazineSize;
+			weapon.loadedAmmo += weapon.magazineSize;
 
+			if (weapon.loadedAmmo > weapon.magazineSize)
+			{
+				weapon.loadedAmmo = weapon.magazineSize;
+			}
+		}
 	}
 }
