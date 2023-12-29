@@ -31,7 +31,7 @@ public class RangedWeaponData : WeaponData, IReloadable
 
 		// Ignore collision with the shooter
 		Collider projectileCollider = projectile.GetComponent<Collider>();
-		Collider[] playerColliders = playerController.GetComponents<Collider>();
+		Collider[] playerColliders = playerController.GetComponentsInChildren<Collider>();
 
 		foreach (Collider playerCollider in playerColliders)
 		{
