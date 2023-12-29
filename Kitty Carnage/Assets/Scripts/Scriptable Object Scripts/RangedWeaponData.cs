@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RangedWeapon", menuName = "Scriptable Objects/Weapons/Ranged Weapon")]
@@ -21,9 +22,21 @@ public class RangedWeaponData : WeaponData, IReloadable
 	[HideInInspector]
 	public bool needsReloading = false;
 
-	public override void Use(Weapon weapon)
+	public override void Use(Weapon weapon, PlayerController playerController)
 	{
+		Transform spawnProjectilePosition = playerController.spawnProjectilePosition;
+		Vector3 aimDirection = playerController.aimDirection;
 
+		GameObject projectile = Instantiate(projectilePrefab, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+
+		// Ignore collision with the shooter
+		Collider projectileCollider = projectile.GetComponent<Collider>();
+		Collider[] playerColliders = playerController.GetComponents<Collider>();
+
+		foreach (Collider playerCollider in playerColliders)
+		{
+			Physics.IgnoreCollision(projectileCollider, playerCollider);
+		}
 	}
 
 	public void Reload(Weapon weapon)

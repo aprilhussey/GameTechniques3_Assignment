@@ -38,6 +38,7 @@ public class Projectile : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		Debug.Log($"{gameObject.name} collided with {other.name}");
 		Destroy(gameObject);
 	}
 }

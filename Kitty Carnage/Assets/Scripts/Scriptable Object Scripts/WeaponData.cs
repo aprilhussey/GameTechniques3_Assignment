@@ -9,5 +9,5 @@ public abstract class WeaponData : ScriptableObject
 	public float range;
 	public float rateOfUse;
 
-	public abstract void Use(Weapon weapon);
+	public abstract void Use(Weapon weapon, PlayerController playerController);
 }

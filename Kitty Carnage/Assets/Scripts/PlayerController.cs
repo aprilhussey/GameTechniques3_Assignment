@@ -69,10 +69,14 @@ public class PlayerController : MonoBehaviour
 
 	//private Transform hitTransform = null;
 
-	[SerializeField]
-	private GameObject projectilePrefab;
-	[SerializeField]
-	private Transform spawnProjectilePosition;
+	//[SerializeField]
+	//private GameObject projectilePrefab;
+
+	// Variables used by Weapon class
+	[HideInInspector]
+	public Vector3 aimDirection;
+	[HideInInspector]
+	public Transform spawnProjectilePosition;
 
 	// Awake is called before Start
 	void Awake()
@@ -220,34 +224,9 @@ public class PlayerController : MonoBehaviour
 
 	public void OnShoot(InputAction.CallbackContext context)
     {
-		/*if (hitTransform != null)
-		{   // Hit something
-			if (hitTransform.GetComponent<BulletTarget>() != null)
-			{
-				// Hit target
-				Instantiate(vfxHitGreen, debugTransform.position, Quaternion.identity);
-			}
-			else
-			{
-				// Hit something else
-				Instantiate(vfxHitRed, debugTransform.position, Quaternion.identity);
-			}
-		}*/
-		GameObject projectilePrefab = weapon.projectilePrefab;
-
-		// Spawn projectile
-		// Projectile moves in direction of mouse direction
-		Vector3 aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
-		GameObject projectile = Instantiate(projectilePrefab, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
-
-		// Ignore collision with the shooter
-		Collider projectileCollider = projectile.GetComponent<Collider>();
-		Collider[] playerColliders = GetComponents<Collider>();
-
-		foreach (Collider playerCollider in playerColliders)
-		{
-			Physics.IgnoreCollision(projectileCollider, playerCollider);
-		}
+		// Set aimDirection
+		aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
+		weapon.UseWeapon();
 	}
 
 	public void OnAim(InputAction.CallbackContext context)

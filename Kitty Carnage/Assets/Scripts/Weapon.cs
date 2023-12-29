@@ -24,6 +24,8 @@ public class Weapon : MonoBehaviour
 	private float reloadTime;
 	private bool needsReloading;
 
+	private PlayerController playerController;
+
 	// Awake is called before Start
 	void Awake()
 	{
@@ -47,18 +49,20 @@ public class Weapon : MonoBehaviour
 			reloadTime = rangedWeaponData.reloadTime;
 			needsReloading = rangedWeaponData.needsReloading;
 		}
+
+		playerController = this.GetComponentInParent<PlayerController>();
 }
 
-	void UseWeapon()
+	public void UseWeapon()
 	{
 		if (weaponData is RangedWeaponData)
 		{
 			RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
-			rangedWeaponData.Use(this);
+			rangedWeaponData.Use(this, playerController);
 		}
 	}
 
-	void ReloadWeapon()
+	public void ReloadWeapon()
 	{
 		if (weaponData is RangedWeaponData)
 		{
