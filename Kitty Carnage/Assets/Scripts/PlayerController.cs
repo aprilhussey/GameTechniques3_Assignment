@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
 		// Set aimDirection
 		aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
-		weapon.UseWeapon();
+		weapon.StartCoroutine(weapon.UseWeapon());
 	}
 
 	public void OnAim(InputAction.CallbackContext context)

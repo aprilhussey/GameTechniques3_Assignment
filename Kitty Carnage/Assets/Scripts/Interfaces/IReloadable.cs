@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IReloadable
 {
-    void Reload(Weapon weapon);
+    IEnumerator Reload(Weapon weapon);
 }

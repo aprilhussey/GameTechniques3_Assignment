@@ -1,6 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RangedWeapon", menuName = "Scriptable Objects/Weapons/Ranged Weapon")]
@@ -19,16 +18,16 @@ public class RangedWeaponData : WeaponData, IReloadable
 
 	[Tooltip("How long it takes to reload this weapon")]
 	public float reloadTime;
-	[HideInInspector]
-	public bool needsReloading = false;
 
 	public override void Use(Weapon weapon, ref PlayerController playerController)
 	{
+		weapon.loadedAmmo -= 1;
+
 		Transform spawnProjectilePosition = playerController.spawnProjectilePosition;
 		Vector3 aimDirection = playerController.aimDirection;
 
 		GameObject projectile = Instantiate(projectilePrefab, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
-		
+
 		// Set Damage of projectile
 		Projectile projectileProjectile = projectile.GetComponent<Projectile>();
 		projectileProjectile.Damage = damage;
@@ -43,17 +42,28 @@ public class RangedWeaponData : WeaponData, IReloadable
 		}
 	}
 
-	public void Reload(Weapon weapon)
+	public IEnumerator Reload(Weapon weapon)
 	{
-		if (weapon.spareAmmo >= weapon.magazineSize)
+		if (weapon.spareAmmo > 0)
 		{
-			weapon.spareAmmo -= weapon.magazineSize;
-			weapon.loadedAmmo += weapon.magazineSize;
+			weapon.reloading = true;
+			yield return new WaitForSecondsRealtime(weapon.reloadTime);
+
+			int ammoToReload = weapon.magazineSize - weapon.loadedAmmo;
+
+			weapon.spareAmmo -= ammoToReload;
+			weapon.loadedAmmo += ammoToReload;
 
 			if (weapon.loadedAmmo > weapon.magazineSize)
 			{
 				weapon.loadedAmmo = weapon.magazineSize;
 			}
+
+			if (weapon.spareAmmo < 0)
+			{
+				weapon.spareAmmo = 0;
+			}
+			weapon.reloading = false;
 		}
 	}
 }

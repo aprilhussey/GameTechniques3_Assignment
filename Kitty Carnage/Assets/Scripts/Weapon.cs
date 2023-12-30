@@ -26,8 +26,12 @@ public class Weapon : MonoBehaviour
 	[HideInInspector]
 	public int maxMagazineAmount;
 
-	private float reloadTime;
-	private bool needsReloading;
+	[HideInInspector]
+	public float reloadTime;
+	[HideInInspector]
+	public bool reloading = false;
+	[HideInInspector]
+	public bool inUse = false;
 
 	private PlayerController playerController;
 
@@ -52,7 +56,6 @@ public class Weapon : MonoBehaviour
 			maxMagazineAmount = rangedWeaponData.maxMagazineAmount;
 
 			reloadTime = rangedWeaponData.reloadTime;
-			needsReloading = rangedWeaponData.needsReloading;
 		}
 
 		playerController = this.GetComponentInParent<PlayerController>();
@@ -60,32 +63,25 @@ public class Weapon : MonoBehaviour
 
 	void Update()
 	{
-        if (loadedAmmo <= 0)
-        {
-			Debug.Log($"Weapon needs reloading");
-			needsReloading = true;
-        }
-		else
+		if (loadedAmmo <= 0)
 		{
-			needsReloading = false;
+			ReloadWeapon();
 		}
     }
 
-	public void UseWeapon()
+	public IEnumerator UseWeapon()
 	{
-		// Check if weapon needs reloading
-		if (needsReloading)
+		if (CanUse())
 		{
-			return;
-		}
-		else
-		{
+			inUse = true;
 			if (weaponData is RangedWeaponData)
 			{
 				RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
 				rangedWeaponData.Use(this, ref playerController);
 			}
-		}
+			yield return new WaitForSecondsRealtime(rateOfUse);
+			inUse = false;
+		}		
 	}
 
 	public void ReloadWeapon()
@@ -93,15 +89,19 @@ public class Weapon : MonoBehaviour
 		if (weaponData is RangedWeaponData)
 		{
 			RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
-			StartCoroutine(ReloadCoroutine(reloadTime));
-			rangedWeaponData.Reload(this);
+			StartCoroutine(rangedWeaponData.Reload(this));
 		}
 	}
-
-	private IEnumerator ReloadCoroutine(float reloadTime)
+	public bool CanUse()
 	{
-		needsReloading = true;
-		yield return new WaitForSeconds(reloadTime);
-		needsReloading = false;
+		/*if (loadedAmmo <= 0 || !reloading || !inUse)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}*/
+		return loadedAmmo > 0 && !reloading && !inUse;
 	}
 }
