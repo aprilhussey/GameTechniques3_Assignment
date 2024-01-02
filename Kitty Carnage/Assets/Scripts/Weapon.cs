@@ -31,7 +31,7 @@ public class Weapon : MonoBehaviour
 	[HideInInspector]
 	public bool reloading = false;
 	[HideInInspector]
-	public bool inUse = false;
+	public bool canUse = true;
 
 	private PlayerController playerController;
 
@@ -69,19 +69,24 @@ public class Weapon : MonoBehaviour
 		}
     }
 
-	public IEnumerator UseWeapon()
+	public void UseWeapon()
 	{
 		if (CanUse())
 		{
-			inUse = true;
 			if (weaponData is RangedWeaponData)
 			{
 				RangedWeaponData rangedWeaponData = weaponData as RangedWeaponData;
 				rangedWeaponData.Use(this, ref playerController);
 			}
-			yield return new WaitForSecondsRealtime(rateOfUse);
-			inUse = false;
+			StartCoroutine(RateOfUse());
 		}		
+	}
+
+	public IEnumerator RateOfUse()
+	{
+		canUse = false;
+		yield return new WaitForSecondsRealtime(rateOfUse);
+		canUse = true;
 	}
 
 	public void ReloadWeapon()
@@ -92,16 +97,9 @@ public class Weapon : MonoBehaviour
 			StartCoroutine(rangedWeaponData.Reload(this));
 		}
 	}
+
 	public bool CanUse()
 	{
-		/*if (loadedAmmo <= 0 || !reloading || !inUse)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}*/
-		return loadedAmmo > 0 && !reloading && !inUse;
+		return loadedAmmo > 0 && !reloading && canUse;
 	}
 }

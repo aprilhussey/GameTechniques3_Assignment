@@ -20,7 +20,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private bool grounded;
     private float groundDistance = 0.2f;    // The radius of the sphere used to check for ground
-	
+
+	[SerializeField]
+	private float interactableDistance = 2f;
+
     // Rigidbody
 	private Rigidbody playerRigidbody;
 
@@ -57,6 +60,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	// Other variables
 	Vector3 mouseWorldPosition = new Vector3();
+	Vector2 screenCenterPoint = new Vector2();
 	[SerializeField]
 	private Transform debugTransform;
 
@@ -111,6 +115,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		// Set other varibles
 		mouseWorldPosition = Vector3.zero;
+		screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
 		equippedItemL = this.GetComponentInChildren<EquippedItemL>().gameObject;
 		equippedItemR = this.GetComponentInChildren<EquippedItemR>().gameObject;
@@ -200,27 +205,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		// Check if there is ground directly below the player
 		grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
-
-		// SHOOT //
-		if (weapon != null)	// If there is a weapon equipped
-		{
-            Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-
-			Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-
-			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, aimColliderLayers))
-			{
-				debugTransform.position = raycastHit.point;
-				mouseWorldPosition = raycastHit.point;
-				//hitTransform = raycastHit.transform;
-			}
-			else    // Manually set distance of raycast
-			{
-				debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
-				mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
-				//hitTransform = raycastHit.transform;
-			}
-		}
 	}
 
     public void OnMovement(InputAction.CallbackContext context)
@@ -261,11 +245,23 @@ public class PlayerController : MonoBehaviour, IDamageable
 		
 	}
 
-	public void OnShoot(InputAction.CallbackContext context)
-    {
-		// Set aimDirection
-		aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
-		weapon.StartCoroutine(weapon.UseWeapon());
+	public void OnInteract(InputAction.CallbackContext context)
+	{
+		if (!context.performed)
+		{
+			return;
+		}
+
+		Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+		if (Physics.Raycast(ray, out RaycastHit raycastHit, interactableDistance))
+		{
+			IInteractable iInteractable = raycastHit.collider.gameObject.GetComponent<IInteractable>();
+
+			if (iInteractable != null)
+			{
+				iInteractable.Interact();
+			}
+		}
 	}
 
 	public void OnAim(InputAction.CallbackContext context)
@@ -280,6 +276,36 @@ public class PlayerController : MonoBehaviour, IDamageable
 			cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
 			aimVirtualCamera.gameObject.SetActive(false);
 		}
+	}
+
+	public void OnShoot(InputAction.CallbackContext context)
+	{
+		if (!context.performed)
+		{
+			return;
+		}
+
+		if (weapon != null) // If there is a weapon equipped
+		{
+			Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+
+			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, aimColliderLayers))
+			{
+				debugTransform.position = raycastHit.point;
+				mouseWorldPosition = raycastHit.point;
+				//hitTransform = raycastHit.transform;
+			}
+			else    // Manually set distance of raycast
+			{
+				debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
+				mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
+				//hitTransform = raycastHit.transform;
+			}
+		}
+
+		// Set aimDirection
+		aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
+		weapon.UseWeapon();
 	}
 
 	public void TakeDamage(float amount)
