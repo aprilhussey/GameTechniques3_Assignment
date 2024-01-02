@@ -45,8 +45,15 @@ public class Interactable : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log($"{other.gameObject.name} can interact with {this.gameObject.name}");
-			
-            popUpInstance = Instantiate(popUpTextPrefab, this.transform.position, Quaternion.identity);
+
+            // Calculate the position in front
+            Vector3 spawnPosition = this.transform.position + this.transform.forward;
+
+            // Calculate the rotation to face the player
+            Quaternion rotation = Quaternion.LookRotation(other.transform.position - spawnPosition);
+
+            // Instantiate popUpInstance
+            popUpInstance = Instantiate(popUpTextPrefab, spawnPosition, rotation);
 			popUpInstance.gameObject.GetComponentInChildren<TextMeshPro>().SetText(interactText);
 		}
     }
