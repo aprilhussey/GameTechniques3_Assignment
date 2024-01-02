@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private GameObject equippedItemL;
 	private GameObject equippedItemR;
 
-	private Weapon weapon;
+	public Weapon weapon;
 	private float weaponRange;
 
 	[SerializeField]
@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 			if (iInteractable != null)
 			{
-				iInteractable.Interact();
+				iInteractable.Interact(this);
 			}
 		}
 	}
@@ -315,5 +315,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 			currentHealth -= amount;
 			healthBar.SetHealth(currentHealth);
 		}
+	}
+
+	public void AddAmmo(int amount)
+	{
+		weapon.spareAmmo = weapon.spareAmmo + amount;
 	}
 }

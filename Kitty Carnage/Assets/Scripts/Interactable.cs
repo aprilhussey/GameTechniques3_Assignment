@@ -35,7 +35,7 @@ public class Interactable : MonoBehaviour, IInteractable
 		Debug.Log($"{this.gameObject.name} has been used");
 	}
 
-    public virtual void Interact()
+    public virtual void Interact(PlayerController playerController)
     {
 		Debug.Log($"{this.gameObject.name} has been interacted with");
 	}

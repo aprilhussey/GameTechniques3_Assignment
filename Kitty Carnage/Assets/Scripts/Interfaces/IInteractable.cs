@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IInteractable
 {
 	void Use();
-	void Interact();
+	void Interact(PlayerController playerController);
 	void OnTriggerEnter(Collider other);
 	void OnTriggerExit(Collider other);
 }

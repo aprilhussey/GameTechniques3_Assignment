@@ -523,6 +523,7 @@ MonoBehaviour:
   maxVerticalRotation: 80
   movementInput: {x: 0, y: 0}
   debugTransform: {fileID: 1142718401}
+  weapon: {fileID: 0}
   vfxHitGreen: {fileID: 2243766560308660624, guid: 578fe15ddaf507f49a3cf10697e95663, type: 3}
   vfxHitRed: {fileID: 2243766560308660624, guid: adcec6a961c6291449f3cafc4124d872, type: 3}
   aimDirection: {x: 0, y: 0, z: 0}
@@ -2739,6 +2740,8 @@ MonoBehaviour:
   interactType: 0
   interactableName: Kitty Cannon ammo
   popUpTextPrefab: {fileID: 536859376708918237, guid: 993035c469e732f49856f2c1d5fa63a1, type: 3}
+  weapon: {fileID: 6920660904338438477, guid: 355afe38e6361d24898585a639a1c42e, type: 3}
+  magazineAmount: 1
 --- !u!1 &909978725
 GameObject:
   m_ObjectHideFlags: 0
