@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Camera playerCamera;
 	private GameObject cameraTarget;
 
+	// Audio listener
+	private AudioListener playerAudioListener;
+
 	[SerializeField]
     private CinemachineVirtualCamera aimVirtualCamera;
 
@@ -122,6 +125,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 		// Set camera / cinemachine variables
 		playerCamera = rootObject.GetComponentInChildren<Camera>();
 		cameraTarget = rootObject.GetComponentInChildren<CameraTarget>().gameObject;
+
+		// Set audio listener
+		playerAudioListener = rootObject.GetComponentInChildren<AudioListener>();
 		
         aimVirtualCamera = rootObject.GetComponentInChildren<PlayerAimCamera>().GetComponent<CinemachineVirtualCamera>();
 
@@ -169,10 +175,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 			if (photonView.IsMine)
 			{
 				playerCamera.enabled = true;
+				playerAudioListener.enabled = true;
 			}
 			else
 			{
 				playerCamera.enabled = false;
+				playerAudioListener.enabled = false;
 			}
 		}
 	}
