@@ -33,14 +33,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Rigidbody playerRigidbody;
 
 	// Camera / Cinemachine variables
-	private Camera playerCamera;
+	[SerializeField]
+	private GameObject playerCamera;
 	private GameObject cameraTarget;
 
 	// Audio listener
+	[SerializeField]
 	private AudioListener playerAudioListener;
 
 	[SerializeField]
     private CinemachineVirtualCamera aimVirtualCamera;
+	private CinemachineVirtualCamera followVirtualCamera;
 
 	private float cameraSensitivity;
 	[SerializeField]
@@ -123,16 +126,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         playerRigidbody = this.GetComponent<Rigidbody>();
 
 		// Set camera / cinemachine variables
-		playerCamera = rootObject.GetComponentInChildren<Camera>();
+		playerCamera = GameObject.FindWithTag("MainCamera");
 		cameraTarget = rootObject.GetComponentInChildren<CameraTarget>().gameObject;
 
 		// Set audio listener
-		playerAudioListener = rootObject.GetComponentInChildren<AudioListener>();
-		
-        aimVirtualCamera = rootObject.GetComponentInChildren<PlayerAimCamera>().GetComponent<CinemachineVirtualCamera>();
+		playerAudioListener = GameObject.FindWithTag("MainCamera").GetComponent<AudioListener>();
 
-        // Set layer mask variables
-        defaultLayer = 1 << LayerMask.NameToLayer("Default");
+		aimVirtualCamera = GameObject.FindWithTag("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
+		followVirtualCamera = GameObject.FindWithTag("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>();
+
+		// Set layer mask variables
+		defaultLayer = 1 << LayerMask.NameToLayer("Default");
         groundLayer = 1 << LayerMask.NameToLayer("Ground");
         aimColliderLayers = defaultLayer | groundLayer;
 
@@ -164,7 +168,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 		healthBar.SetMaxHealth(maxHealth);
 
 		// Set aimVirtualCamera to false when loaded
+		aimVirtualCamera.Follow = this.gameObject.GetComponentInChildren<CameraTarget>().transform;
 		aimVirtualCamera.gameObject.SetActive(false);
+
+		followVirtualCamera.Follow = this.gameObject.GetComponentInChildren<CameraTarget>().transform;
+		followVirtualCamera.LookAt = this.gameObject.GetComponentInChildren<CameraTarget>().transform;
+
 		cameraSensitivity = cameraFollowSensitivity / 10;   // Divided by 10 to get the correct value
 
 		tmpLoadedAmmo.text = weapon.loadedAmmo.ToString();
@@ -174,13 +183,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			if (photonView.IsMine)
 			{
-				playerCamera.enabled = true;
-				playerAudioListener.enabled = true;
+				playerCamera.SetActive(true);
+				aimVirtualCamera.enabled = true;
+				followVirtualCamera.enabled = true;
 			}
 			else
 			{
-				playerCamera.enabled = false;
-				playerAudioListener.enabled = false;
+				playerCamera.SetActive(false);
+				aimVirtualCamera.enabled = false;
+				followVirtualCamera.enabled = false;
 			}
 		}
 	}
@@ -290,7 +301,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			return;
 		}
 
-		Ray ray = playerCamera.ScreenPointToRay(screenCenterPoint);
+		Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(screenCenterPoint);
 		if (Physics.Raycast(ray, out RaycastHit raycastHit, interactableDistance))
 		{
 			IInteractable iInteractable = raycastHit.collider.gameObject.GetComponent<IInteractable>();
@@ -325,7 +336,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (weapon != null) // If there is a weapon equipped
 		{
-			Ray ray = playerCamera.ScreenPointToRay(screenCenterPoint);
+			Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(screenCenterPoint);
 
 			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, aimColliderLayers))
 			{
