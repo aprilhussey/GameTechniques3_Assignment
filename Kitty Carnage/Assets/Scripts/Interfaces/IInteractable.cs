@@ -8,4 +8,5 @@ public interface IInteractable
 	void Interact(PlayerController playerController);
 	void OnTriggerEnter(Collider other);
 	void OnTriggerExit(Collider other);
+	void OnDestroy();
 }

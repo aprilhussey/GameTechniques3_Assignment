@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
@@ -19,6 +20,8 @@ public class Interactable : MonoBehaviour, IInteractable
 	private string interactableName;
     private string interactText;
 
+	private PlayerController lastInteractedPlayer = null;
+
     void Awake()
     {
         interactText = $"{interactType.ToString()} {interactableName}";
@@ -32,6 +35,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public virtual void Interact(PlayerController playerController)
     {
 		Debug.Log($"{this.gameObject.name} has been interacted with");
+		lastInteractedPlayer = playerController;
 	}
 
     public void OnTriggerEnter(Collider other)
@@ -52,24 +56,6 @@ public class Interactable : MonoBehaviour, IInteractable
 		}
     }
 
-    public void OnTriggerStay(Collider other)
-    {
-		if (other.transform.parent.CompareTag("Player"))
-		{
-			GameObject player = other.transform.parent.gameObject;
-
-			if (player != null)
-			{
-				PlayerController playerController = player.GetComponent<PlayerController>();
-
-				if (playerController != null)
-				{
-					playerController.tmpPopUp.text = interactText;
-				}
-			}
-		}
-	}
-
 	public void OnTriggerExit(Collider other)
 	{
 		if (other.transform.parent.CompareTag("Player"))
@@ -85,6 +71,14 @@ public class Interactable : MonoBehaviour, IInteractable
 					playerController.tmpPopUp.text = "";
 				}
 			}
+		}
+	}
+
+	public void OnDestroy()
+	{
+		if (lastInteractedPlayer != null)
+		{
+			lastInteractedPlayer.tmpPopUp.text = "";
 		}
 	}
 }

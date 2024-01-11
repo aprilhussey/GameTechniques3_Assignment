@@ -23,7 +23,8 @@ public class AmmoPickup : Interactable
 
 	public override void Interact(PlayerController newPlayerController)
 	{
-		//base.Interact(playerController);
+		base.Interact(newPlayerController);
+
 		playerController = newPlayerController;
 
 		if (playerController.weapon != null)
