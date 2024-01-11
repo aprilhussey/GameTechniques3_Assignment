@@ -31,13 +31,13 @@ public class Projectile : MonoBehaviour
     {
 		if (Vector3.Distance(spawnPosition, transform.position) > range)
 		{
-			Destroy(gameObject);
+			Destroy(this.gameObject);
 		}
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Destroy(gameObject);
+		Destroy(this.gameObject);
 
 		IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
 
@@ -45,6 +45,5 @@ public class Projectile : MonoBehaviour
 		{
 			damageable.TakeDamage(Damage);
 		}
-		
 	}
 }

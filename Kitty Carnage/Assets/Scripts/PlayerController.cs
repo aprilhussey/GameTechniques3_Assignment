@@ -4,13 +4,18 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using TMPro;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+	// Root
+	GameObject rootObject;
+
     // Player variables
     public float maxHealth = 100f;
 	private float currentHealth;
 
+	private GameObject playerCanvas;
 	private HealthBar healthBar;
 
 	public float speed = 2f;
@@ -28,6 +33,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Rigidbody playerRigidbody;
 
 	// Camera / Cinemachine variables
+	private Camera playerCamera;
 	private GameObject cameraTarget;
 
 	[SerializeField]
@@ -92,19 +98,32 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Popup visuals
 	public TextMeshProUGUI tmpPopUp;
 
+	// Photon
+	PhotonView photonView;
+
 	void Awake()
     {
+		// Set root object
+		rootObject = this.transform.root.gameObject;
+
+		// Set Photon view
+		photonView = rootObject.GetComponent<PhotonView>();
+
+		// Set player canvas
+		playerCanvas = rootObject.GetComponentInChildren<PlayerCanvas>().gameObject;
+
 		// Set health
 		currentHealth = maxHealth;
-		healthBar = this.GetComponentInChildren<HealthBar>();
+		healthBar = playerCanvas.GetComponentInChildren<HealthBar>();
 
         // Set rigidbody
-        playerRigidbody = GetComponent<Rigidbody>();
+        playerRigidbody = this.GetComponent<Rigidbody>();
 
 		// Set camera / cinemachine variables
-		cameraTarget = transform.Find("CameraTarget").gameObject;
+		playerCamera = rootObject.GetComponentInChildren<Camera>();
+		cameraTarget = rootObject.GetComponentInChildren<CameraTarget>().gameObject;
 		
-        aimVirtualCamera = GameObject.Find("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
+        aimVirtualCamera = rootObject.GetComponentInChildren<PlayerAimCamera>().GetComponent<CinemachineVirtualCamera>();
 
         // Set layer mask variables
         defaultLayer = 1 << LayerMask.NameToLayer("Default");
@@ -144,6 +163,18 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		tmpLoadedAmmo.text = weapon.loadedAmmo.ToString();
 		tmpSpareAmmo.text = weapon.spareAmmo.ToString();
+
+		if (photonView != null)
+		{
+			if (photonView.IsMine)
+			{
+				playerCamera.enabled = true;
+			}
+			else
+			{
+				playerCamera.enabled = false;
+			}
+		}
 	}
 
 	void Update()
@@ -251,7 +282,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			return;
 		}
 
-		Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+		Ray ray = playerCamera.ScreenPointToRay(screenCenterPoint);
 		if (Physics.Raycast(ray, out RaycastHit raycastHit, interactableDistance))
 		{
 			IInteractable iInteractable = raycastHit.collider.gameObject.GetComponent<IInteractable>();
@@ -286,7 +317,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (weapon != null) // If there is a weapon equipped
 		{
-			Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+			Ray ray = playerCamera.ScreenPointToRay(screenCenterPoint);
 
 			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, aimColliderLayers))
 			{
@@ -296,8 +327,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 			}
 			else    // Manually set distance of raycast
 			{
-				debugTransform.position = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
-				mouseWorldPosition = Camera.main.transform.position + Camera.main.transform.forward * weaponRange;
+				debugTransform.position = playerCamera.transform.position + playerCamera.transform.forward * weaponRange;
+				mouseWorldPosition = playerCamera	.transform.position + playerCamera.transform.forward * weaponRange;
 				//hitTransform = raycastHit.transform;
 			}
 		}

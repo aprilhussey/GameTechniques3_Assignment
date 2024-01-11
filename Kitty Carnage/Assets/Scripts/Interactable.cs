@@ -40,17 +40,17 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.transform.parent.CompareTag("Player"))
-        {
-            GameObject player = other.transform.parent.gameObject;
-            
-            if (player != null)
-            {
-                PlayerController playerController = player.GetComponent<PlayerController>();
-				
-                if (playerController != null)
+		if (other.transform.parent.CompareTag("Player"))
+		{
+			GameObject player = other.transform.parent.gameObject;
+
+			if (player != null)
+			{
+				PlayerController playerController = player.GetComponent<PlayerController>();
+
+				if (playerController != null)
 				{
-                    playerController.tmpPopUp.text = interactText;
+					playerController.tmpPopUp.text = interactText;
 				}
 			}
 		}
