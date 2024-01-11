@@ -11,7 +11,6 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private Image fill;
 
-	// Awake is called before Start
 	private void Awake()
 	{
 		slider = this.GetComponent<Slider>();

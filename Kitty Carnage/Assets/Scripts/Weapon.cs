@@ -35,7 +35,6 @@ public class Weapon : MonoBehaviour
 
 	private PlayerController playerController;
 
-	// Awake is called before Start
 	void Awake()
 	{
 		// Set WeaponData varaibles

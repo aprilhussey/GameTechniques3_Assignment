@@ -17,20 +17,13 @@ public class PlayerAnimationController : MonoBehaviour
 	[SerializeField]
 	private float animationSmoothTime = 0.1f;
 
-	// Awake is called before Start
 	void Awake()
     {
         playerController = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
 		playerRigidbody = GetComponent<Rigidbody>();
 	}
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
-    // Update is called once per frame
     void Update()
     {
 		// Calculate speed of player

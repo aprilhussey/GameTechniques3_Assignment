@@ -92,7 +92,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Popup visuals
 	public TextMeshProUGUI tmpPopUp;
 
-	// Awake is called before Start
 	void Awake()
     {
 		// Set health
@@ -133,7 +132,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		spawnProjectilePosition = this.GetComponentInChildren<SpawnProjectilePosition>().gameObject.transform;
 	}
 
-	// Start is called before the first frame update
 	void Start()
     {
 		GameManager.instance.HideCursor();
@@ -148,7 +146,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		tmpSpareAmmo.text = weapon.spareAmmo.ToString();
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
         if (currentHealth <= 0)
@@ -171,7 +168,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	// FixedUpdate is called at a fixed interval in sync with the physics system
     void FixedUpdate()
     {
 		// LOOK //

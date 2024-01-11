@@ -16,20 +16,17 @@ public class Projectile : MonoBehaviour
 
 	public float Damage { get; set; }
 
-	// Awake is called before Start
 	void Awake()
 	{
 		projectileRigidbody = GetComponent<Rigidbody>();
 	}
 
-	// Start is called before the first frame update
 	void Start()
 	{
 		spawnPosition = transform.position;
 		projectileRigidbody.velocity = transform.forward * speed;
 	}
 
-	// Update is called once per frame
 	void Update()
     {
 		if (Vector3.Distance(spawnPosition, transform.position) > range)

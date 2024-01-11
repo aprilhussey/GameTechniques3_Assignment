@@ -6,7 +6,6 @@ public class BulletTarget : MonoBehaviour, IDamageable
 {
     public float health = 1f;
 
-    // Update is called once per frame
     void Update()
     {
         if (health <= 0)

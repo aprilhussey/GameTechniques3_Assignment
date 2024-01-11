@@ -19,7 +19,6 @@ public class Interactable : MonoBehaviour, IInteractable
 	private string interactableName;
     private string interactText;
 
-    // Awake is called before Start
     void Awake()
     {
         interactText = $"{interactType.ToString()} {interactableName}";
