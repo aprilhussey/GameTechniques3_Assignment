@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	[SerializeField]
     private CinemachineVirtualCamera aimVirtualCamera;
+	[SerializeField]
 	private CinemachineVirtualCamera followVirtualCamera;
 
 	private float cameraSensitivity;
@@ -113,7 +114,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		rootObject = this.transform.root.gameObject;
 
 		// Set Photon view
-		photonView = rootObject.GetComponent<PhotonView>();
+		photonView = this.GetComponent<PhotonView>();
 
 		// Set player canvas
 		playerCanvas = rootObject.GetComponentInChildren<PlayerCanvas>().gameObject;
@@ -126,14 +127,14 @@ public class PlayerController : MonoBehaviour, IDamageable
         playerRigidbody = this.GetComponent<Rigidbody>();
 
 		// Set camera / cinemachine variables
-		playerCamera = GameObject.FindWithTag("MainCamera");
+		//playerCamera = GameObject.FindWithTag("MainCamera");
 		cameraTarget = rootObject.GetComponentInChildren<CameraTarget>().gameObject;
 
 		// Set audio listener
-		playerAudioListener = GameObject.FindWithTag("MainCamera").GetComponent<AudioListener>();
+		//playerAudioListener = GameObject.FindWithTag("MainCamera").GetComponent<AudioListener>();
 
-		aimVirtualCamera = GameObject.FindWithTag("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
-		followVirtualCamera = GameObject.FindWithTag("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>();
+		//aimVirtualCamera = GameObject.FindWithTag("PlayerAimCamera").GetComponent<CinemachineVirtualCamera>();
+		//followVirtualCamera = GameObject.FindWithTag("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>();
 
 		// Set layer mask variables
 		defaultLayer = 1 << LayerMask.NameToLayer("Default");
@@ -186,74 +187,95 @@ public class PlayerController : MonoBehaviour, IDamageable
 				playerCamera.SetActive(true);
 				aimVirtualCamera.enabled = true;
 				followVirtualCamera.enabled = true;
+
+				playerAudioListener.enabled = true;
 			}
 			else
 			{
 				playerCamera.SetActive(false);
 				aimVirtualCamera.enabled = false;
 				followVirtualCamera.enabled = false;
+
+				playerAudioListener.enabled = false;
 			}
 		}
 	}
 
 	void Update()
 	{
-        if (currentHealth <= 0)
+		if (photonView != null)
 		{
-			Debug.Log($"Player died");
-			//Destroy(gameObject);
-		}
-		// If loaded ammo text is NOT the same as the loaded ammo on the weapon
-		if (tmpLoadedAmmo.text != weapon.loadedAmmo.ToString())
-		{
-			// Update loaded ammo text to be the same as the loaded ammo on the weapon
-			tmpLoadedAmmo.text = weapon.loadedAmmo.ToString();
-		}
 
-		// If spare ammo text is NOT the same as the spare ammo on the weapon
-		if (tmpSpareAmmo.text != weapon.spareAmmo.ToString())
-		{
-			// Update spare ammo text to be the same as the spare ammo on the weapon
-			tmpSpareAmmo.text = weapon.spareAmmo.ToString();
+			if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+			{
+				return;
+			}
+
+			if (currentHealth <= 0)
+			{
+				Debug.Log($"Player died");
+				//Destroy(gameObject);
+			}
+			// If loaded ammo text is NOT the same as the loaded ammo on the weapon
+			if (tmpLoadedAmmo.text != weapon.loadedAmmo.ToString())
+			{
+				// Update loaded ammo text to be the same as the loaded ammo on the weapon
+				tmpLoadedAmmo.text = weapon.loadedAmmo.ToString();
+			}
+
+			// If spare ammo text is NOT the same as the spare ammo on the weapon
+			if (tmpSpareAmmo.text != weapon.spareAmmo.ToString())
+			{
+				// Update spare ammo text to be the same as the spare ammo on the weapon
+				tmpSpareAmmo.text = weapon.spareAmmo.ToString();
+			}
 		}
 	}
 
     void FixedUpdate()
     {
-		// LOOK //
-		// Keep track of current rotation
-		float verticalRotation = cameraTarget.transform.localEulerAngles.x;
-
-		// Rotate the player and camera based on lookInput
-		if (lookInput != Vector2.zero)
-        {
-			// Calculate new rotation
-			float newVerticalRotation = verticalRotation - lookInput.y * cameraSensitivity;
-
-			// Adjust for 360 degree system
-			if (newVerticalRotation > 180)
+		if (photonView != null)
+		{
+			if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
 			{
-				newVerticalRotation -= 360;
+				return;
 			}
 
-			// Clamp rotation to min and max angles
-			verticalRotation = Mathf.Clamp(newVerticalRotation, minVerticalRotation, maxVerticalRotation);
+			// LOOK //
+			// Keep track of current rotation
+			float verticalRotation = cameraTarget.transform.localEulerAngles.x;
 
-			// Apply rotation
-			cameraTarget.transform.localEulerAngles = new Vector3(verticalRotation, 0, 0);
-			this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
-        }
+			// Rotate the player and camera based on lookInput
+			if (lookInput != Vector2.zero)
+			{
+				// Calculate new rotation
+				float newVerticalRotation = verticalRotation - lookInput.y * cameraSensitivity;
 
-		// MOVEMENT//
-		// Move the player in the direction the camera is facing
-		Vector3 movementDirection = (this.transform.forward * movementInput.y + this.transform.right * movementInput.x).normalized;
-       
-        // Apply movementDirection to playerRigidbody
-        playerRigidbody.velocity = new Vector3(movementDirection.x * speed, playerRigidbody.velocity.y, movementDirection.z * speed);
-		playerRigidbody.angularVelocity = Vector3.zero;
+				// Adjust for 360 degree system
+				if (newVerticalRotation > 180)
+				{
+					newVerticalRotation -= 360;
+				}
 
-		// Check if there is ground directly below the player
-		grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
+				// Clamp rotation to min and max angles
+				verticalRotation = Mathf.Clamp(newVerticalRotation, minVerticalRotation, maxVerticalRotation);
+
+				// Apply rotation
+				cameraTarget.transform.localEulerAngles = new Vector3(verticalRotation, 0, 0);
+				this.transform.Rotate(Vector3.up, lookInput.x * cameraSensitivity);
+			}
+
+			// MOVEMENT//
+			// Move the player in the direction the camera is facing
+			Vector3 movementDirection = (this.transform.forward * movementInput.y + this.transform.right * movementInput.x).normalized;
+
+			// Apply movementDirection to playerRigidbody
+			playerRigidbody.velocity = new Vector3(movementDirection.x * speed, playerRigidbody.velocity.y, movementDirection.z * speed);
+			playerRigidbody.angularVelocity = Vector3.zero;
+
+			// Check if there is ground directly below the player
+			grounded = Physics.CheckSphere(this.transform.position, groundDistance, groundLayer);
+		}
 	}
 
     public void OnMovement(InputAction.CallbackContext context)
