@@ -336,7 +336,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			else    // Manually set distance of raycast
 			{
 				debugTransform.position = playerCamera.transform.position + playerCamera.transform.forward * weaponRange;
-				mouseWorldPosition = playerCamera	.transform.position + playerCamera.transform.forward * weaponRange;
+				mouseWorldPosition = playerCamera.transform.position + playerCamera.transform.forward * weaponRange;
 				//hitTransform = raycastHit.transform;
 			}
 		}

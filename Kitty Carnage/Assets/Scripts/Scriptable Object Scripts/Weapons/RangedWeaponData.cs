@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
 [CreateAssetMenu(fileName = "RangedWeapon", menuName = "Scriptable Objects/Weapons/Ranged Weapon")]
 public class RangedWeaponData : WeaponData, IReloadable
@@ -26,7 +27,7 @@ public class RangedWeaponData : WeaponData, IReloadable
 		Transform spawnProjectilePosition = playerController.spawnProjectilePosition;
 		Vector3 aimDirection = playerController.aimDirection;
 
-		GameObject projectile = Instantiate(projectilePrefab, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+		GameObject projectile = PhotonNetwork.Instantiate(projectilePrefab.name, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
 
 		// Set Damage of projectile
 		Projectile projectileProjectile = projectile.GetComponent<Projectile>();
