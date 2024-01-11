@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,14 +16,8 @@ public class Interactable : MonoBehaviour, IInteractable
 	private InteractType interactType;
 
 	[SerializeField]
-    private string interactableName;
-
-    [SerializeField]
-    private GameObject popUpTextPrefab;
-
+	private string interactableName;
     private string interactText;
-
-    private GameObject popUpInstance;
 
     // Awake is called before Start
     void Awake()
@@ -42,33 +37,55 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.transform.parent.CompareTag("Player"))
         {
-            Debug.Log($"{other.gameObject.name} can interact with {this.gameObject.name}");
-
-            // Calculate the position in front
-            Vector3 spawnPosition = this.transform.position + this.transform.forward;
-
-            // Calculate the rotation to face the player
-            Quaternion rotation = Quaternion.LookRotation(other.transform.position - spawnPosition);
-
-            // Instantiate popUpInstance
-            popUpInstance = Instantiate(popUpTextPrefab, spawnPosition, rotation);
-			popUpInstance.gameObject.GetComponentInChildren<TextMeshPro>().SetText(interactText);
+            GameObject player = other.transform.parent.gameObject;
+            
+            if (player != null)
+            {
+                PlayerController playerController = player.GetComponent<PlayerController>();
+				
+                if (playerController != null)
+				{
+                    playerController.tmpPopUp.text = interactText;
+				}
+			}
 		}
     }
 
+    public void OnTriggerStay(Collider other)
+    {
+		if (other.transform.parent.CompareTag("Player"))
+		{
+			GameObject player = other.transform.parent.gameObject;
+
+			if (player != null)
+			{
+				PlayerController playerController = player.GetComponent<PlayerController>();
+
+				if (playerController != null)
+				{
+					playerController.tmpPopUp.text = interactText;
+				}
+			}
+		}
+	}
+
 	public void OnTriggerExit(Collider other)
 	{
-		if (other.gameObject.CompareTag("Player"))
+		if (other.transform.parent.CompareTag("Player"))
 		{
-			// Destroy the popup
-            if (popUpInstance != null )
-            {
-				Debug.Log($"{other.gameObject.name} can NO LONGER interact with {this.gameObject.name}");
-				
-                Destroy(popUpInstance);
-            }
+			GameObject player = other.transform.parent.gameObject;
+
+			if (player != null)
+			{
+				PlayerController playerController = player.GetComponent<PlayerController>();
+
+				if (playerController != null)
+				{
+					playerController.tmpPopUp.text = "";
+				}
+			}
 		}
 	}
 }

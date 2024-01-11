@@ -89,6 +89,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField]
 	private TextMeshProUGUI tmpSpareAmmo;
 
+	// Popup visuals
+	public TextMeshProUGUI tmpPopUp;
+
 	// Awake is called before Start
 	void Awake()
     {
