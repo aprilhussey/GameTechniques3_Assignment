@@ -16,7 +16,7 @@ public class RoomList : MonoBehaviourPunCallbacks
     {
         foreach (RoomInfo roomInfo in roomList)
         {
-            if (roomInfo.RemovedFromList)   // Removed from rooms list
+            if (roomInfo.RemovedFromList)   // Room removed from rooms list
             {
                 int index = roomListings.FindIndex(x => x.RoomInfo.Name == roomInfo.Name);
                 if (index != -1)    // If found
@@ -25,7 +25,7 @@ public class RoomList : MonoBehaviourPunCallbacks
                     roomListings.RemoveAt(index);
                 }
             }
-            else   // Added to rooms list
+            else   // Room added to rooms list
             {
                 RoomListing roomListing = Instantiate(roomListingPrefab, content);
                 if (roomListing != null)

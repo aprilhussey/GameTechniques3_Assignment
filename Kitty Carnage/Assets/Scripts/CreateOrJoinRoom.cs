@@ -15,6 +15,8 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 	[SerializeField]
 	private TextMeshProUGUI roomName;
 
+	public RoomListing roomListing;
+
 	void Start()
 	{
 		createOrJoinRoomCanvas.SetActive(true);
@@ -48,11 +50,6 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 		Debug.Log($"Failed to create room");
 	}
 
-	public void OnJoinRoomClick()
-	{
-		//PhotonNetwork.JoinRoom();
-	}
-
 	public override void OnJoinedRoom()
 	{
 		Debug.Log($"Client successfully joined room");
@@ -60,7 +57,10 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 		createOrJoinRoomCanvas.SetActive(false);
 		currentRoomCanvas.SetActive(true);
 
-		//roomName.text = 
+		if (roomName.text != null && roomListing != null)
+		{
+			roomName.text = roomListing.roomName.text;
+		}
 	}
 
 	public void OnLeaveRoomClick()
@@ -72,6 +72,7 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 	{
 		Debug.Log($"Client successfully left room");
 
+		roomName = null;
 		createOrJoinRoomCanvas.SetActive(true);
 		currentRoomCanvas.SetActive(false);
 	}
