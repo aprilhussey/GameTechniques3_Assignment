@@ -2912,7 +2912,7 @@ namespace Photon.Realtime
                         _RoomInfoList.Add(new RoomInfo(gameName, (Hashtable)games[gameName]));
                     }
 
-                    this.LobbyCallbackTargets.OnRoomListUpdate(_RoomInfoList);
+                    this.LobbyCallbackTargets.OnPlayerListUpdate(_RoomInfoList);
                     break;
 
                 case OperationCode.JoinLobby:
@@ -3280,7 +3280,7 @@ namespace Photon.Realtime
                         _RoomInfoList.Add(new RoomInfo(gameName, (Hashtable)games[gameName]));
                     }
 
-                    this.LobbyCallbackTargets.OnRoomListUpdate(_RoomInfoList);
+                    this.LobbyCallbackTargets.OnPlayerListUpdate(_RoomInfoList);
 
                     break;
 
@@ -3828,7 +3828,7 @@ namespace Photon.Realtime
         ///
         /// The list of rooms (or rooms' updates) is also limited in number, see Lobby Limits.
         /// </remarks>
-        void OnRoomListUpdate(List<RoomInfo> roomList);
+        void OnPlayerListUpdate(List<RoomInfo> roomList);
 
         /// <summary>
         /// Called when the Master Server sent an update for the Lobby Statistics.
@@ -4442,13 +4442,13 @@ namespace Photon.Realtime
             }
         }
 
-        public void OnRoomListUpdate(List<RoomInfo> roomList)
+        public void OnPlayerListUpdate(List<RoomInfo> roomList)
         {
             this.client.UpdateCallbackTargets();
 
             foreach (ILobbyCallbacks target in this)
             {
-                target.OnRoomListUpdate(roomList);
+                target.OnPlayerListUpdate(roomList);
             }
         }
 

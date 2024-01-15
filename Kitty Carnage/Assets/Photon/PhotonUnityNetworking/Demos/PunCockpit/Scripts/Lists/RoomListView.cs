@@ -57,7 +57,7 @@ namespace Photon.Pun.Demo.Cockpit
             OnJoinRoom.Invoke(roomName);
         }
 
-        public override void OnRoomListUpdate(List<RoomInfo> roomList)
+        public override void OnPlayerListUpdate(List<RoomInfo> roomList)
         {
 			UpdateStatusText.text = "Updated";
 

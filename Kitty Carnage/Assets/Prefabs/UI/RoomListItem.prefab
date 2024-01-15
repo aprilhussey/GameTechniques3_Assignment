@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1501466001953740228}
   - component: {fileID: 1917327328136789186}
   m_Layer: 5
-  m_Name: RoomListing
+  m_Name: RoomListItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f8243ee60bf36c4f9bd5d0e4b984276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomName: {fileID: 1984333079969152436}
-  currentPlayersInRoom: {fileID: 1789947938319971176}
-  maxPlayersInRoom: {fileID: 8824473393455233573}
+  roomNameText: {fileID: 1984333079969152436}
+  currentPlayersInRoomText: {fileID: 1789947938319971176}
+  maxPlayersInRoomText: {fileID: 8824473393455233573}
 --- !u!114 &1501466001953740228
 MonoBehaviour:
   m_ObjectHideFlags: 0

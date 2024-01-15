@@ -26,6 +26,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	public void ConnectToServer()
 	{
+		string namePrefix = "Player";
+
+		// Set nickname of player
+		PhotonNetwork.NickName = $"{namePrefix}{Random.Range(1000, 9999)}";
+
+		// Connect to the Photon server
         PhotonNetwork.ConnectUsingSettings();
 	}
 

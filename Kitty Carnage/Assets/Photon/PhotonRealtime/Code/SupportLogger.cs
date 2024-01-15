@@ -362,7 +362,7 @@ namespace Photon.Realtime
 			Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnRegionListReceived(regionHandler).");
         }
 
-        public void OnRoomListUpdate(List<RoomInfo> roomList)
+        public void OnPlayerListUpdate(List<RoomInfo> roomList)
         {
 			Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnRoomListUpdate(roomList). roomList.Count: " + roomList.Count);
         }

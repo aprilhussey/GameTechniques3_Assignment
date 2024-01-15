@@ -3,14 +3,14 @@ using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 
-public class RoomListing : MonoBehaviour
+public class RoomListItem : MonoBehaviour
 {
     [SerializeField]
-    public TextMeshProUGUI roomName;
+    public TextMeshProUGUI roomNameText;
 	[SerializeField]
-	private TextMeshProUGUI currentPlayersInRoom;
+	private TextMeshProUGUI currentPlayersInRoomText;
 	[SerializeField]
-	private TextMeshProUGUI maxPlayersInRoom;
+	private TextMeshProUGUI maxPlayersInRoomText;
 
 	public RoomInfo RoomInfo { get; private set; }
 
@@ -23,15 +23,15 @@ public class RoomListing : MonoBehaviour
 
 	public void OnJoinRoomClick()
 	{
-		PhotonNetwork.JoinRoom(roomName.text);
-		createOrJoinRoom.roomListing = this;
+		PhotonNetwork.JoinRoom(roomNameText.text);
+		createOrJoinRoom.roomListItem = this;
 	}
 
 	public void SetRoomInfo(RoomInfo roomInfo)
 	{
 		RoomInfo = roomInfo;
-		roomName.text = roomInfo.Name.ToString();
-		currentPlayersInRoom.text = roomInfo.PlayerCount.ToString();
-		maxPlayersInRoom.text = roomInfo.MaxPlayers.ToString();
+		roomNameText.text = roomInfo.Name.ToString();
+		currentPlayersInRoomText.text = roomInfo.PlayerCount.ToString();
+		maxPlayersInRoomText.text = roomInfo.MaxPlayers.ToString();
 	}
 }

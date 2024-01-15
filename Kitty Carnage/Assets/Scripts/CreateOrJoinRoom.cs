@@ -13,9 +13,10 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 	[SerializeField]
 	private GameObject currentRoomCanvas;
 	[SerializeField]
-	private TextMeshProUGUI roomName;
+	private TextMeshProUGUI roomNameText;
 
-	public RoomListing roomListing;
+	[HideInInspector]
+	public RoomListItem roomListItem;
 
 	void Start()
 	{
@@ -42,7 +43,7 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 	{
 		Debug.Log($"Created room successfully");
 
-		roomName.text = roomNameInput.text;
+		roomNameText.text = roomNameInput.text;
 	}
 
 	public override void OnCreateRoomFailed(short returnCode, string message)
@@ -57,9 +58,9 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 		createOrJoinRoomCanvas.SetActive(false);
 		currentRoomCanvas.SetActive(true);
 
-		if (roomName.text != null && roomListing != null)
+		if (roomNameText.text != null && roomListItem != null)
 		{
-			roomName.text = roomListing.roomName.text;
+			roomNameText.text = roomListItem.roomNameText.text;
 		}
 	}
 
@@ -72,7 +73,7 @@ public class CreateOrJoinRoom : MonoBehaviourPunCallbacks
 	{
 		Debug.Log($"Client successfully left room");
 
-		roomName = null;
+		roomNameText = null;
 		createOrJoinRoomCanvas.SetActive(true);
 		currentRoomCanvas.SetActive(false);
 	}

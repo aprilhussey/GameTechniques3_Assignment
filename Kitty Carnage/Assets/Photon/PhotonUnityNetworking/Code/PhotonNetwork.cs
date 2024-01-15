@@ -2071,7 +2071,7 @@ namespace Photon.Pun
 
         /// <summary>On MasterServer this joins the default lobby which list rooms currently in use.</summary>
         /// <remarks>
-        /// The room list is sent and refreshed by the server using <see cref="ILobbyCallbacks.OnRoomListUpdate"/>.
+        /// The room list is sent and refreshed by the server using <see cref="ILobbyCallbacks.OnPlayerListUpdate"/>.
         ///
         /// Per room you should check if it's full or not before joining. Photon also lists rooms that are
         /// full, unless you close and hide them (room.open = false and room.visible = false).
@@ -2096,7 +2096,7 @@ namespace Photon.Pun
 
         /// <summary>On a Master Server you can join a lobby to get lists of available rooms.</summary>
         /// <remarks>
-        /// The room list is sent and refreshed by the server using <see cref="ILobbyCallbacks.OnRoomListUpdate"/>.
+        /// The room list is sent and refreshed by the server using <see cref="ILobbyCallbacks.OnPlayerListUpdate"/>.
         ///
         /// Any client can "make up" any lobby on the fly. Splitting rooms into multiple lobbies will
         /// keep each list shorter. However, having too many lists might ruin the matchmaking experience.
