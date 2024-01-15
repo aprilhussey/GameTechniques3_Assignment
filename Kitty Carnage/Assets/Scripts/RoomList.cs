@@ -10,9 +10,15 @@ public class RoomList : MonoBehaviourPunCallbacks
     [SerializeField]
     private RoomListItem roomListItemPrefab;
 
-    private List<RoomListItem> roomListItems = new List<RoomListItem>();
+    public List<RoomListItem> roomListItems = new List<RoomListItem>();
 
-    public override void OnPlayerListUpdate(List<RoomInfo> roomList)
+	public override void OnJoinedRoom()
+	{
+        content.DestroyChildren();
+        roomListItems.Clear();
+	}
+
+	public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         foreach (RoomInfo roomInfo in roomList)
         {
@@ -27,11 +33,15 @@ public class RoomList : MonoBehaviourPunCallbacks
             }
             else   // Room added to rooms list
             {
-                RoomListItem roomListItem = Instantiate(roomListItemPrefab, content);
-                if (roomListItem != null)
+				int index = roomListItems.FindIndex(x => x.RoomInfo.Name == roomInfo.Name);
+                if (index == -1)    // If NOT found
                 {
-                    roomListItem.SetRoomInfo(roomInfo);
-                    roomListItems.Add(roomListItem);
+                    RoomListItem roomListItem = Instantiate(roomListItemPrefab, content);
+                    if (roomListItem != null)
+                    {
+                        roomListItem.SetRoomInfo(roomInfo);
+                        roomListItems.Add(roomListItem);
+                    }
                 }
             }
         }

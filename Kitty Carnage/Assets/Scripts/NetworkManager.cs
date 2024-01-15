@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,7 +39,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	public override void OnConnectedToMaster()
 	{
 		Debug.Log($"Client successfully connected to server");
-		PhotonNetwork.JoinLobby();
+		
+		if (!PhotonNetwork.InLobby)
+		{
+			PhotonNetwork.JoinLobby();
+		}
 	}
 
     public override void OnJoinedLobby()

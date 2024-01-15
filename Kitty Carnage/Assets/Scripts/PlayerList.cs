@@ -50,4 +50,10 @@ public class PlayerList : MonoBehaviourPunCallbacks
 			playerListItems.RemoveAt(index);
 		}
 	}
+
+	public override void OnLeftRoom()
+	{
+		content.DestroyChildren();
+		playerListItems.Clear();
+	}
 }
