@@ -616,7 +616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5694519526586616000
 Transform:
   m_ObjectHideFlags: 0
@@ -2162,7 +2162,7 @@ MonoBehaviour:
   movementInput: {x: 0, y: 0}
   weapon: {fileID: 0}
   zoomDirection: {x: 0, y: 0, z: 0}
-  spawnProjectilePosition: {fileID: 0}
+  spawnProjectilePosition: {fileID: 6923178589345567160}
   tmpLoadedAmmo: {fileID: 8823385813459295903}
   tmpSpareAmmo: {fileID: 6736454985981371388}
   tmpPopUp: {fileID: 4376878487693058083}
