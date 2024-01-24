@@ -21,7 +21,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	void Start()
     {
-        ConnectToServer();
+		ConnectToServer();
     }
 
 	public void ConnectToServer()
@@ -38,7 +38,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	public override void OnConnectedToMaster()
 	{
 		Debug.Log($"Client successfully connected to server");
-		
+
+		// Ensures that when the MasterClient loads a new scene, all other players in the same
+		// will also load the new scene
+		PhotonNetwork.AutomaticallySyncScene = true;
+
 		if (!PhotonNetwork.InLobby)
 		{
 			PhotonNetwork.JoinLobby();
