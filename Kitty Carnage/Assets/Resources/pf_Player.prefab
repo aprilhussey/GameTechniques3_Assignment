@@ -2216,6 +2216,8 @@ GameObject:
   - component: {fileID: 3251484082452026538}
   - component: {fileID: 8456651392627956084}
   - component: {fileID: 1425991692907906854}
+  - component: {fileID: 7242753493678743600}
+  - component: {fileID: 177643977967902885}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2279,14 +2281,14 @@ MonoBehaviour:
   speed: 2
   jumpForce: 5
   interactableDistance: 2
-  playerCamera: {fileID: 0}
+  playerCamera: {fileID: 2631279889537755665}
   followVirtualCamera: {fileID: 1125429236633264806}
   zoomVirtualCamera: {fileID: 7990453973413358644}
   minVerticalRotation: -80
   maxVerticalRotation: 80
   cameraFollowSensitivity: 5
   cameraZoomSensitivity: 2.5
-  playerAudioListener: {fileID: 0}
+  playerAudioListener: {fileID: 2071228222152754542}
   movementInput: {x: 0, y: 0}
   weapon: {fileID: 0}
   zoomDirection: {x: 0, y: 0, z: 0}
@@ -2497,10 +2499,46 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 7242753493678743600}
+  - {fileID: 177643977967902885}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &7242753493678743600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8995301547141905116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &177643977967902885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8995301547141905116}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &9198532020873243737
 GameObject:
   m_ObjectHideFlags: 0

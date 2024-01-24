@@ -126,11 +126,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		playerRigidbody = this.GetComponent<Rigidbody>();
 
 		// Set camera / cinemachine variables
-		playerCamera = GameObject.FindWithTag("MainCamera");
 		cameraTarget = this.gameObject.GetComponentInChildren<CameraTarget>().gameObject;
-
-		// Set audio listener
-		playerAudioListener = GameObject.FindWithTag("MainCamera").GetComponent<AudioListener>();
 
 		// Set layer mask variables
 		defaultLayer = 1 << LayerMask.NameToLayer("Default");
