@@ -1,8 +1,11 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerList : MonoBehaviourPunCallbacks
 {
@@ -12,6 +15,9 @@ public class PlayerList : MonoBehaviourPunCallbacks
     private PlayerListItem playerListItemPrefab;
 
     private List<PlayerListItem> playerListItems = new List<PlayerListItem>();
+
+	[SerializeField]
+	private Button playerReadyButton;
 
 	void Awake()
 	{
@@ -55,5 +61,48 @@ public class PlayerList : MonoBehaviourPunCallbacks
 	{
 		content.DestroyChildren();
 		playerListItems.Clear();
+	}
+
+	public void OnPlayerReadyClick()
+	{
+		// Do not use a new hashtable everytime but rather the existing
+		// in order to not loose any other properties you might have later
+		var hash = PhotonNetwork.LocalPlayer.CustomProperties;
+		hash["Ready"] = true;
+		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+		playerReadyButton.gameObject.SetActive(false);
+
+		if (!PhotonNetwork.IsMasterClient) return;
+
+		CheckAllPlayersReady();
+	}
+
+	public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+	{
+		if (!PhotonNetwork.IsMasterClient) return;
+
+		if (!changedProps.ContainsKey("Ready")) return;
+
+		CheckAllPlayersReady();
+	}
+
+	public override void OnMasterClientSwitched(Player newMasterClient)
+	{
+		if (newMasterClient != PhotonNetwork.LocalPlayer) return;
+
+		CheckAllPlayersReady();
+	}
+
+	private void CheckAllPlayersReady()
+	{
+		var players = PhotonNetwork.PlayerList;
+
+		// This is just using a shorthand via Linq instead of having a loop with a counter
+		// for checking whether all players in the list have the key "Ready" in their custom properties
+		if (players.All(player => player.CustomProperties.ContainsKey("Ready") && (bool)player.CustomProperties["Ready"]))
+		{
+			Debug.Log("All players are ready!");
+			SceneManager.LoadScene("Game");
+		}
 	}
 }
