@@ -107,6 +107,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Photon
 	private PhotonView photonView;
 
+	[SerializeField]
+	private GameObject playerMeshPrefab;
+
 	void Awake()
 	{
 		// Set root object

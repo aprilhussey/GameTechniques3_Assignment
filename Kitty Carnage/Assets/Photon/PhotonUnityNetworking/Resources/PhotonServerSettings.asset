@@ -39,6 +39,14 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - SetBeard
+  - SetFaceAccessory
+  - SetHair
+  - SetHat
+  - SetHeadAccessory
+  - SetMesh
+  - SetHeadAccesories
+  - SetHeadAccessories
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
