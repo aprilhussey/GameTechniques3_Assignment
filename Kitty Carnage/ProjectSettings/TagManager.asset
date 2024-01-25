@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ZoomCamera
   - FollowCamera
+  - PlayerMesh
   layers:
   - Default
   - TransparentFX
