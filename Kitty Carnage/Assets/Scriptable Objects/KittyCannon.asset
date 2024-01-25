@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4957a76c43a695d41acf0b286355a898, type: 3}
+  m_Name: KittyCannon
+  m_EditorClassIdentifier: 
+  damage: 50
+  range: 20
+  rateOfUse: 1
+  projectilePrefab: {fileID: 1859234679933314, guid: bc65310c625c3cf4b8f3c8d272d726ad, type: 3}
+  loadedAmmo: 1
+  spareAmmo: 0
+  magazineSize: 1
+  maxMagazineAmount: 3
+  reloadTime: 1
