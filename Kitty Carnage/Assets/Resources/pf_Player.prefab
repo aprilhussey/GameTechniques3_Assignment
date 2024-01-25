@@ -1311,7 +1311,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5215629899135537160}
-  - component: {fileID: 2120138955765208093}
   m_Layer: 0
   m_Name: pf_Player
   m_TagString: Untagged
@@ -1340,28 +1339,6 @@ Transform:
   - {fileID: 5694519526586616000}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2120138955765208093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4653857498811301488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 0
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &4774305788970632767
 GameObject:
   m_ObjectHideFlags: 0
@@ -2553,6 +2530,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8458880230626175837, guid: e3463737ec2dfb2448298be728119ef4, type: 3}
+      propertyPath: photonView
+      value: 
+      objectReference: {fileID: 1425991692907906854}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

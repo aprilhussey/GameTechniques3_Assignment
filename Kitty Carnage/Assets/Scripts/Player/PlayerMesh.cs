@@ -55,12 +55,36 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 	private bool isHairSet = false;
 	private bool isHatSet = false;
 
+	// Photon view
+	[SerializeField]
+	private PhotonView playerPhotonView;
+
 	public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
 	{
+		// Find player prefab to apply this to based on target player
+		if (!changedProperties.ContainsKey("ViewID")) return;
+
+		// GO get player who has this view ID.
+		GameObject player = FindPlayerWithViewId(changedProperties["ViewID"].ConvertTo<int>());
+
 		if (changedProperties.ContainsKey("Mesh") && changedProperties.ContainsKey("Material"))
 		{
-			SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
+			Debug.Log($"target player:{targetPlayer.NickName} has Mesh: {changedProperties["Mesh"].ToString()}");
+			player.GetComponentInChildren<PlayerMesh>().SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
 		}
+	}
+
+	private GameObject FindPlayerWithViewId(int viewId)
+	{
+		GameObject[] playerObjectsInScene = GameObject.FindGameObjectsWithTag("Player");
+		foreach (GameObject playerObject in playerObjectsInScene)
+		{
+			if (playerObject.GetComponent<PhotonView>().ViewID == viewId)
+			{
+				return playerObject;
+			}
+		}
+		return null;
 	}
 
 	void Start()
@@ -149,7 +173,7 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		var hash = PhotonNetwork.LocalPlayer.CustomProperties;
 		hash["Mesh"] = chosenCharacterPrefab.name;
 		hash["Material"] = chosenMaterial.name;
-
+		hash["ViewID"] = photonView.ViewID;
 		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 	}
 
@@ -211,83 +235,6 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 
 		// Set the materials of the skinnedMeshRenderer to the modified copy
 		skinnedMeshRenderer.sharedMaterials = smrMaterials;
-	}
-
-	private void SetMesh()
-	{
-		characterPrefabs = new List<List<GameObject>> { costumeCharacterPrefabs,
-			feminineCharacterPrefabs, masculineCharacterPrefabs };
-
-		// Choose random index
-		int characterPrefabsIndex = Random.Range(0, characterPrefabs.Count);
-
-		// Choose random list
-		List<GameObject> chosenCharacterPrefabList = characterPrefabs[characterPrefabsIndex];
-
-		// Set bools
-		if (chosenCharacterPrefabList != null )
-		{
-			if (chosenCharacterPrefabList == costumeCharacterPrefabs)
-			{
-				isCostume = true;
-				isFeminine = false;
-				isMasculine = false;
-			}
-			else if (chosenCharacterPrefabList == feminineCharacterPrefabs)
-			{
-				isCostume = false;
-				isFeminine = true;
-				isMasculine = false;
-			}
-			else if (chosenCharacterPrefabList == masculineCharacterPrefabs)
-			{
-				isCostume = false;
-				isFeminine = false;
-				isMasculine = true;
-			}
-		}
-
-		// Choose random index
-		int chosenCharacterPrefabListIndex = Random.Range(0, chosenCharacterPrefabList.Count);
-
-		// Choose random character mesh from chosen character mesh list
-		GameObject chosenCharacterPrefab = chosenCharacterPrefabList[chosenCharacterPrefabListIndex];
-
-		// Set mesh
-		skinnedMeshRenderer.sharedMesh = chosenCharacterPrefab.GetComponent<MeshFilter>().sharedMesh;
-
-		// Materials
-		Material[] chosenCharacterPrefabMaterials = chosenCharacterPrefab.GetComponent<MeshRenderer>().sharedMaterials;
-
-		List<List<Material>> materialLists = new List<List<Material>> { polygonBattleRoyaleMaterials };
-
-		foreach (Material material in chosenCharacterPrefabMaterials)
-		{
-			for (int i = 0; i < materialLists.Count; i++)
-			{
-				if (materialLists[i].Contains(material))
-				{
-					// Choose random index
-					int index = Random.Range(0, materialLists[i].Count);
-
-					// Choose random material
-					Material chosenMaterial = materialLists[i][index];
-
-					Material[] smrMaterials = skinnedMeshRenderer.sharedMaterials;
-
-					// Set smrMaterials
-					for (int j = 0; j < smrMaterials.Length; j++)
-					{
-						smrMaterials[j] = chosenMaterial;
-					}
-
-					// Set the materials of the skinnedMeshRenderer to the modified copy
-					skinnedMeshRenderer.sharedMaterials = smrMaterials;
-
-					break;
-				}
-			}
-		}
 	}
 
 	void SetHeadAccessories()
