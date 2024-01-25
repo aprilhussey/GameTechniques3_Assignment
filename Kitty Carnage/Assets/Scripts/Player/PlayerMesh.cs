@@ -1,8 +1,11 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMesh : MonoBehaviour
+public class PlayerMesh : MonoBehaviourPunCallbacks
 {
     [SerializeField]
     private SkinnedMeshRenderer skinnedMeshRenderer;
@@ -52,17 +55,164 @@ public class PlayerMesh : MonoBehaviour
 	private bool isHairSet = false;
 	private bool isHatSet = false;
 
-	// Photon view
-	[SerializeField]
-	private PhotonView photonView;
+	public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
+	{
+		if (changedProperties.ContainsKey("Mesh") && changedProperties.ContainsKey("Material"))
+		{
+			SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
+		}
+	}
 
 	void Start()
     {
-		photonView.RPC("SetMesh", RpcTarget.AllBuffered);
-		photonView.RPC("SetHeadAccessories", RpcTarget.AllBuffered);
+		GenerateMeshAndMaterial();
 	}
 
-	[PunRPC]
+	private bool MaterialFoundInList(List<Material> materialList, Material material)
+	{
+		foreach (Material materialInList in materialList)
+		{
+			if (materialInList.name ==  material.name)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void GenerateMeshAndMaterial()
+	{
+		// GENERATE MESH //
+		characterPrefabs = new List<List<GameObject>> { costumeCharacterPrefabs,
+			feminineCharacterPrefabs, masculineCharacterPrefabs };
+
+		// Choose random index
+		int characterPrefabsIndex = Random.Range(0, characterPrefabs.Count);
+
+		// Choose random list
+		List<GameObject> chosenCharacterPrefabList = characterPrefabs[characterPrefabsIndex];
+
+		// Set bools
+		if (chosenCharacterPrefabList != null)
+		{
+			if (chosenCharacterPrefabList == costumeCharacterPrefabs)
+			{
+				isCostume = true;
+				isFeminine = false;
+				isMasculine = false;
+			}
+			else if (chosenCharacterPrefabList == feminineCharacterPrefabs)
+			{
+				isCostume = false;
+				isFeminine = true;
+				isMasculine = false;
+			}
+			else if (chosenCharacterPrefabList == masculineCharacterPrefabs)
+			{
+				isCostume = false;
+				isFeminine = false;
+				isMasculine = true;
+			}
+		}
+
+		// Choose random index
+		int chosenCharacterPrefabListIndex = Random.Range(0, chosenCharacterPrefabList.Count);
+
+		// Choose random character mesh from chosen character mesh list
+		GameObject chosenCharacterPrefab = chosenCharacterPrefabList[chosenCharacterPrefabListIndex];
+
+		// GENERATE MATERIAL //
+		Material[] chosenCharacterPrefabMaterials = chosenCharacterPrefab.GetComponent<MeshRenderer>().sharedMaterials;
+
+		List<List<Material>> materialLists = new List<List<Material>> { polygonBattleRoyaleMaterials };
+
+		Material chosenMaterial = materialLists[0][0];
+
+		foreach (Material material in chosenCharacterPrefabMaterials)
+		{
+			for (int i = 0; i < materialLists.Count; i++)
+			{
+				List<Material> materialList = materialLists[i];
+				if (MaterialFoundInList(materialList, material))
+				{
+					// Choose random index
+					int index = Random.Range(0, materialList.Count);
+
+					// Choose random material
+					chosenMaterial = materialList[index];
+
+					Debug.Log($"Chosen material name: {chosenMaterial.name}");
+				}
+			}
+		}
+
+		var hash = PhotonNetwork.LocalPlayer.CustomProperties;
+		hash["Mesh"] = chosenCharacterPrefab.name;
+		hash["Material"] = chosenMaterial.name;
+
+		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+	}
+
+	private GameObject FindMeshPrefab(string meshPrefabName)
+	{
+		GameObject costumePrefab = (GameObject)Resources.Load($"Characters/Costumes/{meshPrefabName}");
+		GameObject femininePrefab = (GameObject)Resources.Load($"Characters/Feminine/{meshPrefabName}");
+		GameObject masculinePrefab = (GameObject)Resources.Load($"Characters/Masculine/{meshPrefabName}");
+
+		if (costumePrefab != null)
+		{
+			return costumePrefab;
+		}
+		else if (femininePrefab != null)
+		{
+			return femininePrefab;
+		}
+		else if (masculinePrefab != null)
+		{  
+			return masculinePrefab;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	private Material FindMaterial(string materialName)
+	{
+		Material polygonBattleRoyaleMaterials = (Material)Resources.Load($"Materials/PolygonBattleRoyale/{materialName}");
+
+		if (polygonBattleRoyaleMaterials != null)
+		{
+			return polygonBattleRoyaleMaterials;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	private void SetMeshAndMaterial(string meshPrefabName, string materialName)
+	{
+		GameObject meshPrefab = FindMeshPrefab(meshPrefabName);
+
+		// SET MESH //
+		skinnedMeshRenderer.sharedMesh = meshPrefab.GetComponent<MeshFilter>().sharedMesh;
+
+		// SET MATERIAL //
+		Material[] smrMaterials = skinnedMeshRenderer.sharedMaterials;
+
+		Material chosenMaterial = FindMaterial(materialName);
+
+		// Set smrMaterials
+		for (int j = 0; j < smrMaterials.Length; j++)
+		{
+			smrMaterials[j] = chosenMaterial;
+		}
+
+		// Set the materials of the skinnedMeshRenderer to the modified copy
+		skinnedMeshRenderer.sharedMaterials = smrMaterials;
+	}
+
 	private void SetMesh()
 	{
 		characterPrefabs = new List<List<GameObject>> { costumeCharacterPrefabs,
@@ -105,7 +255,8 @@ public class PlayerMesh : MonoBehaviour
 
 		// Set mesh
 		skinnedMeshRenderer.sharedMesh = chosenCharacterPrefab.GetComponent<MeshFilter>().sharedMesh;
-		
+
+		// Materials
 		Material[] chosenCharacterPrefabMaterials = chosenCharacterPrefab.GetComponent<MeshRenderer>().sharedMaterials;
 
 		List<List<Material>> materialLists = new List<List<Material>> { polygonBattleRoyaleMaterials };
@@ -116,7 +267,6 @@ public class PlayerMesh : MonoBehaviour
 			{
 				if (materialLists[i].Contains(material))
 				{
-
 					// Choose random index
 					int index = Random.Range(0, materialLists[i].Count);
 
@@ -140,37 +290,30 @@ public class PlayerMesh : MonoBehaviour
 		}
 	}
 
-	[PunRPC]
 	void SetHeadAccessories()
 	{
 		if (Random.value < 0.5f)
 		{
-			//SetBeard();
-			photonView.RPC("SetBeard", RpcTarget.AllBuffered);
+			SetBeard();
 		}
 		if (Random.value < (isBeardSet ? 0.3f : 0.7f))
 		{
-			//SetFaceAccessory();
-			photonView.RPC("SetFaceAccessory", RpcTarget.AllBuffered);
+			SetFaceAccessory();
 		}
 		if (Random.value < 0.5f)
 		{
-			//SetHair();
-			photonView.RPC("SetHair", RpcTarget.AllBuffered);
+			SetHair();
 		}
 		if (Random.value < (isHairSet ? 0.1f : 0.9f))
 		{
-			//SetHat();
-			photonView.RPC("SetHat", RpcTarget.AllBuffered);
+			SetHat();
 		}
 		if (Random.value < (isHatSet ? 0f : 0.5f))
 		{
-			//SetHeadAccessory();
-			photonView.RPC("SetHeadAccessory", RpcTarget.AllBuffered);
+			SetHeadAccessory();
 		}
 	}
 
-	[PunRPC]
 	private void SetBeard()
 	{
 		if (isMasculine)
@@ -191,7 +334,6 @@ public class PlayerMesh : MonoBehaviour
 		}
 	}
 
-	[PunRPC]
 	private void SetFaceAccessory()
 	{
 		if (!isCostume)
@@ -210,7 +352,6 @@ public class PlayerMesh : MonoBehaviour
 		}
 	}
 
-	[PunRPC]
 	private void SetHair()
 	{
 		if (!isCostume)
@@ -231,7 +372,6 @@ public class PlayerMesh : MonoBehaviour
 		}
 	}
 
-	[PunRPC]
 	private void SetHat()
 	{
 		isHatSet = true;
@@ -252,7 +392,6 @@ public class PlayerMesh : MonoBehaviour
 		}
 	}
 
-	[PunRPC]
 	private void SetHeadAccessory()
 	{
 		if (!isCostume)

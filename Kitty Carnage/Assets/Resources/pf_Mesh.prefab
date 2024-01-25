@@ -1740,7 +1740,6 @@ GameObject:
   - component: {fileID: 7921225725406286907}
   - component: {fileID: 8458880230626175837}
   - component: {fileID: 8167419392455187926}
-  - component: {fileID: 1920596485675732385}
   m_Layer: 0
   m_Name: pf_Mesh
   m_TagString: Untagged
@@ -1859,20 +1858,19 @@ MonoBehaviour:
   - {fileID: 1853224248472396, guid: d4dbe74a3050eb94d8946de0d69c4a7d, type: 3}
   - {fileID: 1928997662969700, guid: d9926b7d373e7124abdfd5efb45961e8, type: 3}
   polygonBattleRoyaleMaterials:
-  - {fileID: 2100000, guid: a74066172cf19cd4bacae3c6600a7217, type: 2}
-  - {fileID: 2100000, guid: e350145d6cafff04b8cf76653d7bbf03, type: 2}
-  - {fileID: 2100000, guid: c331decf400f6ae419b9e8ac8db020ba, type: 2}
-  - {fileID: 2100000, guid: f773f9e7d08bedd44b73534af5c327e2, type: 2}
-  - {fileID: 2100000, guid: 2ed6e36fef9da7944ac2639fe1968b88, type: 2}
-  - {fileID: 2100000, guid: c87d7b05a2d4ddc45a525f1f1d6a7e74, type: 2}
-  - {fileID: 2100000, guid: 97a96693c2c6e934cb4c090fe8d0d36c, type: 2}
-  - {fileID: 2100000, guid: 47d60f289d473f14db54a59172baee38, type: 2}
-  - {fileID: 2100000, guid: 66f01a2f0cda4f74db64932e7f31c68d, type: 2}
-  - {fileID: 2100000, guid: 104879306de394242abb32cffee7abcd, type: 2}
-  - {fileID: 2100000, guid: c7d2b77e9eb74f141b05376aeb31ed25, type: 2}
-  - {fileID: 2100000, guid: 66726266de844d9429d9470341916e07, type: 2}
+  - {fileID: 2100000, guid: 649a36d92dc0b83479b73dcfacd262c2, type: 2}
+  - {fileID: 2100000, guid: 78233b987c1f5c64690af832cdfcf04a, type: 2}
+  - {fileID: 2100000, guid: 94378738f0f0b0a45a6f4dc406f23473, type: 2}
+  - {fileID: 2100000, guid: bceec3b1239ba4f4abab14b0f5954176, type: 2}
+  - {fileID: 2100000, guid: d0b822214fd800343b7a3eaec7dc6b56, type: 2}
+  - {fileID: 2100000, guid: 1acd22e8ff64a89419bd57fc299239a2, type: 2}
+  - {fileID: 2100000, guid: 9b4cd0fe10a88c942baf7c236d5627f1, type: 2}
+  - {fileID: 2100000, guid: 78d6c8001de5c7b4980148c33b1022f6, type: 2}
+  - {fileID: 2100000, guid: 1bcc0b79fbaea9f46b0c0e99c9b62bbe, type: 2}
+  - {fileID: 2100000, guid: b4b03539a2e74224e9f50a6689295fc5, type: 2}
+  - {fileID: 2100000, guid: cd18af26c34013b4997ba5510c72c97e, type: 2}
+  - {fileID: 2100000, guid: 219ba7dda3f67374ba11721af5e950a6, type: 2}
   headAccessories: {fileID: 4337733473432923594}
-  photonView: {fileID: 1920596485675732385}
 --- !u!137 &8167419392455187926
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -1975,28 +1973,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0004054308, y: 0.8465292, z: -0.05522339}
     m_Extent: {x: 1.02213, y: 0.94204265, z: 0.2557459}
   m_DirtyAABB: 0
---- !u!114 &1920596485675732385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4288330838419791003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &4337733473432923594
 GameObject:
   m_ObjectHideFlags: 0
