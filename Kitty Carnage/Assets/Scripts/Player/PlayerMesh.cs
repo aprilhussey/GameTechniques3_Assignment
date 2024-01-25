@@ -58,11 +58,6 @@ public class PlayerMesh : MonoBehaviour
 
 	void Start()
     {
-		//headAccessories = this.gameObject.GetComponentInChildren<HeadAccessories>().gameObject;
-
-		//SetMesh();
-		//SetHeadAccessories();
-
 		photonView.RPC("SetMesh", RpcTarget.AllBuffered);
 		photonView.RPC("SetHeadAccessories", RpcTarget.AllBuffered);
 	}
