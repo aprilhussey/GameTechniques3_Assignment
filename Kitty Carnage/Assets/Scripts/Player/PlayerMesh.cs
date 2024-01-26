@@ -72,6 +72,26 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 			Debug.Log($"target player:{targetPlayer.NickName} has Mesh: {changedProperties["Mesh"].ToString()}");
 			player.GetComponentInChildren<PlayerMesh>().SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
 		}
+		if (changedProperties.ContainsKey("Beard"))
+		{
+			player.GetComponentInChildren<PlayerMesh>().SetBeard(changedProperties["Beard"].ToString());
+		}
+		if (changedProperties.ContainsKey("FaceAccessory"))
+		{
+			player.GetComponentInChildren<PlayerMesh>().SetFaceAccessory(changedProperties["FaceAccessory"].ToString());
+		}
+		if (changedProperties.ContainsKey("Hair"))
+		{
+			player.GetComponentInChildren<PlayerMesh>().SetHair(changedProperties["Hair"].ToString());
+		}
+		if (changedProperties.ContainsKey("Hat"))
+		{
+			player.GetComponentInChildren<PlayerMesh>().SetHat(changedProperties["Hat"].ToString());
+		}
+		if (changedProperties.ContainsKey("HeadAccessory"))
+		{
+			player.GetComponentInChildren<PlayerMesh>().SetHeadAccessory(changedProperties["HeadAccessory"].ToString());
+		}
 	}
 
 	private GameObject FindPlayerWithViewId(int viewId)
@@ -90,6 +110,7 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 	void Start()
     {
 		GenerateMeshAndMaterial();
+		GenerateHeadAccessories();
 	}
 
 	private bool MaterialFoundInList(List<Material> materialList, Material material)
@@ -237,31 +258,53 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		skinnedMeshRenderer.sharedMaterials = smrMaterials;
 	}
 
-	void SetHeadAccessories()
+	void GenerateHeadAccessories()
 	{
+		var hash = PhotonNetwork.LocalPlayer.CustomProperties;
 		if (Random.value < 0.5f)
 		{
-			SetBeard();
+			string beard = GenerateBeard();
+			if (beard != null)
+			{
+				hash["Beard"] = beard;
+			}
 		}
-		if (Random.value < (isBeardSet ? 0.3f : 0.7f))
+		if (Random.value < (isBeardSet ? 0f : 0.5f))
 		{
-			SetFaceAccessory();
+			string faceAccessory = GenerateFaceAccessory();
+			if (faceAccessory != null)
+			{
+				hash["FaceAccessory"] = faceAccessory;
+			}
 		}
 		if (Random.value < 0.5f)
 		{
-			SetHair();
+			string hair = GenerateHair();
+			if (hair != null)
+			{
+				hash["Hair"] = hair;
+			}
 		}
 		if (Random.value < (isHairSet ? 0.1f : 0.9f))
 		{
-			SetHat();
+			string hat = GenerateHat();
+			if (hat != null)
+			{
+				hash["Hat"] = hat;
+			}
 		}
 		if (Random.value < (isHatSet ? 0f : 0.5f))
 		{
-			SetHeadAccessory();
+			string headAccessory = GenerateHeadAccessory();
+			if (headAccessory != null)
+			{
+				hash["HeadAccessory"] = headAccessory;
+			}
 		}
+		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 	}
 
-	private void SetBeard()
+	private string GenerateBeard()
 	{
 		if (isMasculine)
 		{
@@ -273,15 +316,21 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 			// Choose random beard
 			GameObject chosenBeard = beardPrefabs[index];
 
-			// Add to head accessories
-			GameObject beardAttachment = PhotonNetwork.Instantiate($"Player Attachments/Beards/{chosenBeard.name}", Vector3.zero, Quaternion.identity);
-
-			// Set as child of head accessories
-			beardAttachment.transform.SetParent(headAccessories.transform, false);
+			return chosenBeard.name;
 		}
+		return null;
 	}
 
-	private void SetFaceAccessory()
+	private void SetBeard(string beardPrefabName) 
+	{
+		// Add to head accessories
+		GameObject beardAttachment = PhotonNetwork.Instantiate($"Player Attachments/Beards/{beardPrefabName}", Vector3.zero, Quaternion.identity);
+
+		// Set as child of head accessories
+		beardAttachment.transform.SetParent(this.gameObject.GetComponentInChildren<HeadAccessories>().gameObject.transform, false);
+	}
+
+	private string GenerateFaceAccessory()
 	{
 		if (!isCostume)
 		{
@@ -291,15 +340,21 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 			// Choose random face accessory
 			GameObject chosenFaceAccessory = faceAccessoryPrefabs[index];
 
-			// Add to head accessories
-			GameObject faceAccessoryAttachment = PhotonNetwork.Instantiate($"Player Attachments/Face Accessories/{chosenFaceAccessory.name}", Vector3.zero, Quaternion.identity);
-
-			// Set as child of head accessories
-			faceAccessoryAttachment.transform.SetParent(headAccessories.transform, false);
+			return chosenFaceAccessory.name;
 		}
+		return null;
 	}
 
-	private void SetHair()
+	private void SetFaceAccessory(string faceAccessoryPrefabName)
+	{
+		// Add to head accessories
+		GameObject faceAccessoryAttachment = PhotonNetwork.Instantiate($"Player Attachments/Face Accessories/{faceAccessoryPrefabName}", Vector3.zero, Quaternion.identity);
+
+		// Set as child of head accessories
+		faceAccessoryAttachment.transform.SetParent(this.gameObject.GetComponentInChildren<HeadAccessories>().gameObject.transform, false);
+	}
+
+	private string GenerateHair()
 	{
 		if (!isCostume)
 		{
@@ -311,49 +366,67 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 			// Choose random hair
 			GameObject chosenHair = hairPrefabs[index];
 
-			// Add to head accessories
-			GameObject hairAttachment = PhotonNetwork.Instantiate($"Player Attachments/Hairs/{chosenHair.name}", Vector3.zero, Quaternion.identity);
-
-			// Set as child of head accessories
-			hairAttachment.transform.SetParent(headAccessories.transform, false);
+			return chosenHair.name;
 		}
+		return null;
 	}
 
-	private void SetHat()
+	private void SetHair(string hairPrefabName)
 	{
-		isHatSet = true;
+		// Add to head accessories
+		GameObject hairAttachment = PhotonNetwork.Instantiate($"Player Attachments/Hairs/{hairPrefabName}", Vector3.zero, Quaternion.identity);
 
+		// Set as child of head accessories
+		hairAttachment.transform.SetParent(this.gameObject.GetComponentInChildren<HeadAccessories>().gameObject.transform, false);
+	}
+
+	private string GenerateHat()
+	{
 		if (!isCostume)
 		{
+			isHatSet = true;
+
 			// Choose random index
 			int index = Random.Range(0, hatPrefabs.Count);
 
 			// Choose random hat
 			GameObject chosenHat = hatPrefabs[index];
 
-			// Add to head accessories
-			GameObject hatAttachment = PhotonNetwork.Instantiate($"Player Attachments/Hats/{chosenHat.name}", Vector3.zero, Quaternion.identity);
-
-			// Set as child of head accessories
-			hatAttachment.transform.SetParent(headAccessories.transform, false);
+			return chosenHat.name;
 		}
+		return null;
 	}
 
-	private void SetHeadAccessory()
+	private void SetHat(string hatPrefabName)
+	{
+		// Add to head accessories
+		GameObject hatAttachment = PhotonNetwork.Instantiate($"Player Attachments/Hats/{hatPrefabName}", Vector3.zero, Quaternion.identity);
+
+		// Set as child of head accessories
+		hatAttachment.transform.SetParent(this.gameObject.GetComponentInChildren<HeadAccessories>().gameObject.transform, false);
+	}
+
+	private string GenerateHeadAccessory()
 	{
 		if (!isCostume)
 		{
 			// Choose random index
 			int index = Random.Range(0, headAccessoryPrefabs.Count);
 
-			// Choose random hat
+			// Choose random head accessory
 			GameObject chosenHeadAccessory = headAccessoryPrefabs[index];
 
-			// Add to head accessories
-			GameObject headAccessoryAttachment = PhotonNetwork.Instantiate($"Player Attachments/Head Accessories/{chosenHeadAccessory.name}", Vector3.zero, Quaternion.identity);
-
-			// Set as child of head accessories
-			headAccessoryAttachment.transform.SetParent(headAccessories.transform, false);
+			return chosenHeadAccessory.name;
 		}
+		return null;
+	}
+
+	private void SetHeadAccessory(string headAccessoryPrefabName)
+	{
+		// Add to head accessories
+		GameObject headAccessoryAttachment = PhotonNetwork.Instantiate($"Player Attachments/Head Accessories/{headAccessoryPrefabName}", Vector3.zero, Quaternion.identity);
+
+		// Set as child of head accessories
+		headAccessoryAttachment.transform.SetParent(this.gameObject.GetComponentInChildren<HeadAccessories>().gameObject.transform, false);
 	}
 }
