@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3adc9e277bb5a594393109e303753080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: 3107ff8f2acaf114b9ac6b131e3f4cbb, type: 2}
   range: 0
   projectilePrefab: {fileID: 0}
   loadedAmmo: 0

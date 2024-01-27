@@ -144,14 +144,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 		mouseWorldPosition = Vector3.zero;
 		screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
-		//equippedItemL = this.GetComponentInChildren<EquippedItemL>().gameObject;
-		//equippedItemR = this.GetComponentInChildren<EquippedItemR>().gameObject;
+		equippedItemL = this.GetComponentInChildren<EquippedItemL>().gameObject;
+		equippedItemR = this.GetComponentInChildren<EquippedItemR>().gameObject;
 
-		//weapon = equippedItemR.GetComponentInChildren<Weapon>();
-
-		if (weapon != null)
+		if (equippedItemR != null)
 		{
-			weaponRange = weapon.range;
+			weapon = equippedItemR.GetComponentInChildren<Weapon>();
+			
+			if (weapon != null)
+			{
+				weaponRange = weapon.range;
+			}
 		}
 	}
 
@@ -161,7 +164,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		healthBar.SetMaxHealth(maxHealth);
 
-		// Set aimVirtualCamera to false when loaded
+		// Set zoomVirtualCamera to false when loaded
 		zoomVirtualCamera.Follow = this.gameObject.GetComponentInChildren<CameraTarget>().transform;
 		zoomVirtualCamera.gameObject.SetActive(false);
 
