@@ -56,7 +56,6 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 	private bool isHatSet = false;
 
 	// Photon view
-	[SerializeField]
 	private PhotonView playerPhotonView;
 
 	public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
@@ -70,7 +69,8 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		if (changedProperties.ContainsKey("Mesh") && changedProperties.ContainsKey("Material"))
 		{
 			Debug.Log($"target player:{targetPlayer.NickName} has Mesh: {changedProperties["Mesh"].ToString()}");
-			player.GetComponentInChildren<PlayerMesh>().SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
+			var playerMesh = player.GetComponentInChildren<PlayerMesh>();
+			playerMesh.SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
 		}
 		if (changedProperties.ContainsKey("Beard"))
 		{
@@ -109,6 +109,8 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 
 	void Start()
     {
+		playerPhotonView = transform.parent.GetComponent<PhotonView>();
+
 		GenerateMeshAndMaterial();
 		GenerateHeadAccessories();
 	}
@@ -194,7 +196,7 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		var hash = PhotonNetwork.LocalPlayer.CustomProperties;
 		hash["Mesh"] = chosenCharacterPrefab.name;
 		hash["Material"] = chosenMaterial.name;
-		hash["ViewID"] = photonView.ViewID;
+		hash["ViewID"] = playerPhotonView.ViewID;
 		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 	}
 
