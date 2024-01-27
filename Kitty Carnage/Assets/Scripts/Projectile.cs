@@ -24,7 +24,7 @@ public class Projectile : MonoBehaviour
 	void Start()
 	{
 		spawnPosition = transform.position;
-		projectileRigidbody.velocity = transform.forward * speed;
+		projectileRigidbody.velocity = transform.forward * -speed;
 		Debug.Log($"projectile velocity: {projectileRigidbody.velocity}");
 	}
 
