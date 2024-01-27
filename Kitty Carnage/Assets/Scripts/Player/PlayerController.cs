@@ -191,6 +191,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 				followVirtualCamera.enabled = true;
 
 				playerAudioListener.enabled = true;
+
+				playerCanvas.SetActive(true);
 			}
 			else
 			{
@@ -199,6 +201,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 				followVirtualCamera.enabled = false;
 
 				playerAudioListener.enabled = false;
+
+				playerCanvas.SetActive(false);
 			}
 		}
 	}
