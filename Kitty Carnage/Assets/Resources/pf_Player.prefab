@@ -2145,7 +2145,7 @@ MonoBehaviour:
   playerCamera: {fileID: 2631279889537755665}
   followVirtualCamera: {fileID: 1125429236633264806}
   zoomVirtualCamera: {fileID: 7990453973413358644}
-  minVerticalRotation: -80
+  minVerticalRotation: -40
   maxVerticalRotation: 80
   cameraFollowSensitivity: 5
   cameraZoomSensitivity: 2.5
@@ -2160,7 +2160,6 @@ MonoBehaviour:
   debugTransform: {fileID: 5694519526586616000}
   vfxHitGreen: {fileID: 0}
   vfxHitRed: {fileID: 0}
-  playerMeshPrefab: {fileID: 4288330838419791003, guid: e3463737ec2dfb2448298be728119ef4, type: 3}
 --- !u!114 &4036006612395421519
 MonoBehaviour:
   m_ObjectHideFlags: 0

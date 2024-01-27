@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Vector2 lookInput;
 
 	[Header("Weapon")]
+	[HideInInspector]
 	public Weapon weapon;
 	private float weaponRange;
 
@@ -106,9 +107,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	// Photon
 	private PhotonView photonView;
-
-	[SerializeField]
-	private GameObject playerMeshPrefab;
 
 	void Awake()
 	{
