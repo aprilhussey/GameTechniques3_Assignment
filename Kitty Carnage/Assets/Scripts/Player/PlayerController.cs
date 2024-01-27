@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// Layer masks
 	private LayerMask defaultLayer;
 	private LayerMask groundLayer;
-	private LayerMask zoomColliderLayers;
+	private LayerMask aimColliderLayers;
 
 	// Input actions variables
 	[HideInInspector]
@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private float weaponRange;
 
 	[HideInInspector]
-	public Vector3 zoomDirection;
+	public Vector3 aimDirection;
 	public Transform spawnProjectilePosition;
 
 	[Header("HUD")]
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		// Set layer mask variables
 		defaultLayer = 1 << LayerMask.NameToLayer("Default");
 		groundLayer = 1 << LayerMask.NameToLayer("Ground");
-		zoomColliderLayers = defaultLayer | groundLayer;
+		aimColliderLayers = defaultLayer | groundLayer;
 
 		// Set input actions variables
 		movementInput = Vector2.zero;
@@ -370,7 +370,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(screenCenterPoint);
 
-			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, zoomColliderLayers))
+			if (Physics.Raycast(ray, out RaycastHit raycastHit, weaponRange, aimColliderLayers))
 			{
 				debugTransform.position = raycastHit.point;
 				mouseWorldPosition = raycastHit.point;
@@ -384,7 +384,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			}
 
 			// Set zoomDirection
-			zoomDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
+			aimDirection = (mouseWorldPosition - spawnProjectilePosition.position).normalized;
 			weapon.UseWeapon();
 		}
 	}

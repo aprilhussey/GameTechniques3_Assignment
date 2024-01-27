@@ -25,9 +25,9 @@ public class RangedWeaponData : WeaponData, IReloadable
 		weapon.loadedAmmo -= 1;
 
 		Transform spawnProjectilePosition = playerController.spawnProjectilePosition;
-		Vector3 aimDirection = playerController.zoomDirection;
+		Vector3 zoomDirection = playerController.aimDirection;
 
-		GameObject projectile = PhotonNetwork.Instantiate(projectilePrefab.name, spawnProjectilePosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+		GameObject projectile = PhotonNetwork.Instantiate(projectilePrefab.name, spawnProjectilePosition.position, Quaternion.LookRotation(zoomDirection, Vector3.up));
 
 		// Set Damage of projectile
 		Projectile projectileProjectile = projectile.GetComponent<Projectile>();
