@@ -47,6 +47,11 @@ MonoBehaviour:
   - SetMesh
   - SetHeadAccesories
   - SetHeadAccessories
+  - Interact
+  - DeleteMe
+  - DestroyMe
+  - TakeDamage
+  - DestroyOnMaster
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

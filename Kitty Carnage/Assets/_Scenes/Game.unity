@@ -314,6 +314,7 @@ GameObject:
   - component: {fileID: 579145606}
   - component: {fileID: 579145605}
   - component: {fileID: 579145609}
+  - component: {fileID: 579145611}
   m_Layer: 0
   m_Name: Interactable
   m_TagString: Untagged
@@ -442,8 +443,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactType: 0
   interactableName: Kitty Cannon
+  photonView: {fileID: 0}
   weapon: {fileID: 6920660904338438477, guid: f29cddffc900fc94a91ed91fc4256699, type: 3}
   magazineAmount: 1
+--- !u!114 &579145611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579145603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &692975367
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,6 +723,7 @@ GameObject:
   - component: {fileID: 1107151671}
   - component: {fileID: 1107151670}
   - component: {fileID: 1107151669}
+  - component: {fileID: 1107151674}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -801,12 +826,34 @@ Transform:
   m_GameObject: {fileID: 1107151668}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.34, y: 1.5, z: -2.6}
+  m_LocalPosition: {x: -0.34, y: 1.5, z: -3.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1107151674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107151668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1511539117
 GameObject:
   m_ObjectHideFlags: 0

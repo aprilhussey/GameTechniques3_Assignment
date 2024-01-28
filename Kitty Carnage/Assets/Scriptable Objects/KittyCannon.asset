@@ -16,8 +16,8 @@ MonoBehaviour:
   range: 20
   rateOfUse: 1
   projectilePrefab: {fileID: 1859234679933314, guid: bc65310c625c3cf4b8f3c8d272d726ad, type: 3}
-  loadedAmmo: 1
+  loadedAmmo: 10
   spareAmmo: 0
-  magazineSize: 1
+  magazineSize: 10
   maxMagazineAmount: 3
   reloadTime: 1

@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Inspector
   m_RootView: {fileID: 11}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 49
+  controlID: 122
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 48
+  controlID: 121
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -506,7 +506,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/_Scenes
+    - Assets/Scriptable Objects
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -514,16 +514,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/_Scenes
+  - Assets/Scriptable Objects
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\GitHub\GameTechniques3_Assignment\Kitty Carnage
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: fe6b0000
-    m_LastClickedID: 27646
-    m_ExpandedIDs: 00000000d86b0000da6b0000dc6b0000de6b0000e06b0000e26b0000e46b0000e66b0000e86b0000ec6b0000ee6b0000f06b0000f26b0000f46b0000f66b0000f86b000000ca9a3b
+    scrollPos: {x: 0, y: 66}
+    m_SelectedIDs: 286c0000
+    m_LastClickedID: 27688
+    m_ExpandedIDs: 00000000f06b0000f26b0000f46b0000f66b0000f86b0000fa6b0000fc6b0000fe6b0000006c0000026c0000046c0000066c0000086c00000a6c00000c6c00000e6c00002a6c000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -551,7 +551,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 8eedffff
     m_LastClickedID: -4722
-    m_ExpandedIDs: 00000000d86b0000da6b0000dc6b0000de6b0000e06b0000e26b0000e46b0000e66b0000e86b0000ea6b0000ec6b0000ee6b0000f06b0000f26b0000f46b0000f66b0000f86b0000
+    m_ExpandedIDs: 00000000f06b0000f26b0000f46b0000f66b0000f86b0000fa6b0000fc6b0000fe6b0000006c0000026c0000046c0000066c0000086c00000a6c00000c6c00000e6c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -691,9 +691,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 42bc0000
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: a8cffeffc0d4feff28e2feff8c0cffff862cffffe062ffff4663ffff4a63ffff4e63ffff5263ffffe063ffffe463ffffe863ffffec63fffff263fffffc63ffff1064ffff3e64ffff4064ffff089affff6e9affff729affff769affff7a9affff089bffff0c9bffff109bffff149bffff1a9bffff229bffff369bffff649bffff669bffff88c3ffffe2c3ffff36c7ffff5cc7ffff74c7ffff7cefffffd6efffff2af3ffff50f3ffff6cf3ffff00fbffff
+      m_ExpandedIDs: da51ffff3252ffff9255ffffc655ffffe655ffffba79ffffe27effff1e90ffff7690ffffd693ffff0a94ffff2a94ffff2a9dffffd2a8ffff02d2ffff2ad4ffff58d4ffff5ad4ffff30ddffff8cdfffff8edfffff28eafffff2f2ffff00fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1086,9 +1086,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.46369886, y: 2.0884318, z: -0.49995732}
+    m_Target: {x: 0.12153244, y: -2.986045, z: 2.3178368}
     speed: 2
-    m_Value: {x: 0.46369886, y: 2.0884318, z: -0.49995732}
+    m_Value: {x: 0.12153244, y: -2.986045, z: 2.3178368}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1134,13 +1134,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.089366235, y: -0.7249713, z: 0.09581203, w: 0.67620826}
+    m_Target: {x: 0.5035233, y: -0.119731985, z: 0.07070076, w: 0.85271955}
     speed: 2
-    m_Value: {x: 0.089365914, y: -0.72496873, z: 0.09581169, w: 0.6762058}
+    m_Value: {x: 0.5035231, y: -0.11973194, z: 0.070700735, w: 0.85271925}
   m_Size:
-    m_Target: 2.369034
+    m_Target: 8.362005
     speed: 2
-    m_Value: 2.369034
+    m_Value: 8.362005
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1232,7 +1232,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1

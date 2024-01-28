@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	[Header("Player")]
 	public float maxHealth = 100f;
+	[SerializeField]
 	private float currentHealth;
 
 	private GameObject playerCanvas;
@@ -106,7 +107,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	//private Transform hitTransform = null;
 
 	// Photon
-	private PhotonView photonView;
+	[HideInInspector]
+	public PhotonView photonView;
 
 	void Awake()
 	{
@@ -211,16 +213,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		if (photonView != null)
 		{
-
-			if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
-			{
-				return;
-			}
+			if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
 
 			if (currentHealth <= 0)
 			{
 				Debug.Log($"Player died");
-				//Destroy(gameObject);
+
+				if (photonView.IsMine || PhotonNetwork.IsMasterClient)
+				{
+					photonView.RPC("DestroyMe", RpcTarget.AllBuffered);
+				}
+				else
+				{
+					photonView.RPC("DestroyMe", RpcTarget.MasterClient);
+				}
 			}
 
 			if (weapon != null)
@@ -246,10 +252,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		if (photonView != null)
 		{
-			if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
-			{
-				return;
-			}
+			if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
 
 			// LOOK //
 			// Keep track of current rotation
@@ -290,6 +293,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void OnMovement(InputAction.CallbackContext context)
 	{
+		if (!photonView.IsMine) return;
+
 		if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed)
 		{
 			movementInput = context.ReadValue<Vector2>();
@@ -302,6 +307,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void OnLook(InputAction.CallbackContext context)
 	{
+		if (!photonView.IsMine) return;
+
 		if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed)
 		{
 			lookInput = context.ReadValue<Vector2>();
@@ -314,6 +321,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void OnJump(InputAction.CallbackContext context)
 	{
+		if (!photonView.IsMine) return;
+
 		if (grounded)  // If the player is grounded
 		{
 			// Set the vertical velocity directly for a consistent jump height
@@ -328,11 +337,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void OnInteract(InputAction.CallbackContext context)
 	{
-		if (!context.performed)
-		{
-			return;
-		}
+		if (!photonView.IsMine) return;
 
+		if (!context.performed) return;
+
+		Debug.Log("Interact after context");
 		Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(screenCenterPoint);
 		if (Physics.Raycast(ray, out RaycastHit raycastHit, interactableDistance))
 		{
@@ -347,6 +356,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void OnZoom(InputAction.CallbackContext context)
 	{
+		if (!photonView.IsMine) return;
+
 		if (context.action.triggered)
 		{
 			cameraSensitivity = cameraZoomSensitivity / 10;  // Divided by 10 to get the correct value
@@ -361,10 +372,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void OnShoot(InputAction.CallbackContext context)
 	{
-		if (!context.performed)
-		{
-			return;
-		}
+		if (!photonView.IsMine) return;
+
+		if (!context.performed) return;
 
 		if (weapon != null) // If there is a weapon equipped
 		{
@@ -389,6 +399,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
+	[PunRPC]
 	public void TakeDamage(float amount)
 	{
 		if (currentHealth > 0)
@@ -400,9 +411,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void AddAmmo(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		if (weapon != null)
 		{
 			weapon.spareAmmo = weapon.spareAmmo + amount;
 		}
+	}
+
+	[PunRPC]
+	void DestroyMe()
+	{
+		PhotonNetwork.Destroy(this.gameObject);
 	}
 }

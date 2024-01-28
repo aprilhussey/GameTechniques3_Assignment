@@ -63,7 +63,7 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		// Find player prefab to apply this to based on target player
 		if (!changedProperties.ContainsKey("ViewID")) return;
 
-		// GO get player who has this view ID.
+		// Go get player who has this view ID.
 		GameObject player = FindPlayerWithViewId(changedProperties["ViewID"].ConvertTo<int>());
 
 		if (changedProperties.ContainsKey("Mesh") && changedProperties.ContainsKey("Material"))

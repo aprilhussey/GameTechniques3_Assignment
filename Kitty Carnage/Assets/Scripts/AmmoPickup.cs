@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class AmmoPickup : Interactable
@@ -33,10 +32,23 @@ public class AmmoPickup : Interactable
 			{
 				if (playerController.weapon.spareAmmo < playerController.weapon.magazineSize * playerController.weapon.maxMagazineAmount)
 				{
-					Destroy(this.gameObject);
+					if (photonView.IsMine || PhotonNetwork.IsMasterClient)
+					{
+						photonView.RPC("DestroyMe", RpcTarget.AllBuffered);
+					}
+					else
+					{
+						photonView.RPC("DestroyMe", RpcTarget.MasterClient);
+					}
 					Use();
 				}
 			}
 		}
+	}
+
+	[PunRPC]
+	void DestroyMe()
+	{
+		PhotonNetwork.Destroy(this.gameObject);
 	}
 }

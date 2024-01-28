@@ -1,4 +1,5 @@
 using Cinemachine;
+using Photon.Pun;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
@@ -18,9 +19,23 @@ public class Interactable : MonoBehaviour, IInteractable
 
 	private PlayerController lastInteractedPlayer = null;
 
+	[HideInInspector]
+	public PhotonView photonView;
+
     void Awake()
     {
         interactText = $"{interactType.ToString()} {interactableName}";
+
+		photonView = this.GetComponent<PhotonView>();
+
+		if  (photonView != null)
+		{
+			Debug.Log($"{this.gameObject.name} successfully found a photon view");
+		}
+		else
+		{
+			Debug.Log($"{this.gameObject.name} failed to find a photon view");
+		}
     }
 
     public virtual void Use()
@@ -49,6 +64,10 @@ public class Interactable : MonoBehaviour, IInteractable
 					playerController.tmpPopUp.text = interactText;
 				}
 			}
+		}
+		else
+		{
+			return;
 		}
     }
 
