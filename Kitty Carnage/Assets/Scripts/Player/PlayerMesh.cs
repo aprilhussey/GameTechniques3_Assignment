@@ -70,7 +70,7 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		{
 			Debug.Log($"target player:{targetPlayer.NickName} has Mesh: {changedProperties["Mesh"].ToString()}");
 			var playerMesh = player.GetComponentInChildren<PlayerMesh>();
-			playerMesh.SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
+			//playerMesh.SetMeshAndMaterial(changedProperties["Mesh"].ToString(), changedProperties["Material"].ToString());
 		}
 		if (changedProperties.ContainsKey("Beard"))
 		{
@@ -111,11 +111,16 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
     {
 		playerPhotonView = transform.parent.GetComponent<PhotonView>();
 
-		GenerateMeshAndMaterial();
+		//GenerateMeshAndMaterial();
+
+		// Remove when generate mesh and material works
+		isFeminine = true;
+		isMasculine = true;
+
 		GenerateHeadAccessories();
 	}
 
-	private bool MaterialFoundInList(List<Material> materialList, Material material)
+	/*private bool MaterialFoundInList(List<Material> materialList, Material material)
 	{
 		foreach (Material materialInList in materialList)
 		{
@@ -125,9 +130,9 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 			}
 		}
 		return false;
-	}
+	}*/
 	
-	private void GenerateMeshAndMaterial()
+	/*private void GenerateMeshAndMaterial()
 	{
 		// GENERATE MESH //
 		characterPrefabs = new List<List<GameObject>> { costumeCharacterPrefabs,
@@ -198,9 +203,9 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		hash["Material"] = chosenMaterial.name;
 		hash["ViewID"] = playerPhotonView.ViewID;
 		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-	}
+	}*/
 
-	private GameObject FindMeshPrefab(string meshPrefabName)
+	/*private GameObject FindMeshPrefab(string meshPrefabName)
 	{
 		GameObject costumePrefab = (GameObject)Resources.Load($"Characters/Costumes/{meshPrefabName}");
 		GameObject femininePrefab = (GameObject)Resources.Load($"Characters/Feminine/{meshPrefabName}");
@@ -222,9 +227,9 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 		{
 			return null;
 		}
-	}
+	}*/
 
-	private Material FindMaterial(string materialName)
+	/*private Material FindMaterial(string materialName)
 	{
 		Material polygonBattleRoyaleMaterials = (Material)Resources.Load($"Materials/PolygonBattleRoyale/{materialName}");
 
@@ -237,8 +242,8 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 			return null;
 		}
 	}
-
-	private void SetMeshAndMaterial(string meshPrefabName, string materialName)
+	*/
+	/*private void SetMeshAndMaterial(string meshPrefabName, string materialName)
 	{
 		GameObject meshPrefab = FindMeshPrefab(meshPrefabName);
 
@@ -258,11 +263,11 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 
 		// Set the materials of the skinnedMeshRenderer to the modified copy
 		skinnedMeshRenderer.sharedMaterials = smrMaterials;
-	}
+	}*/
 
 	void GenerateHeadAccessories()
 	{
-		var hash = PhotonNetwork.LocalPlayer.CustomProperties;
+		/*var hash = PhotonNetwork.LocalPlayer.CustomProperties;
 		if (Random.value < 0.5f)
 		{
 			string beard = GenerateBeard();
@@ -303,7 +308,48 @@ public class PlayerMesh : MonoBehaviourPunCallbacks
 				hash["HeadAccessory"] = headAccessory;
 			}
 		}
-		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+		PhotonNetwork.LocalPlayer.SetCustomProperties(hash);*/
+
+		if (Random.value < 0.5f)
+		{
+			string beard = GenerateBeard();
+			if (beard != null)
+			{
+				SetBeard(beard);
+			}
+		}
+		if (Random.value < (isBeardSet ? 0f : 0.5f))
+		{
+			string faceAccessory = GenerateFaceAccessory();
+			if (faceAccessory != null)
+			{
+				SetFaceAccessory(faceAccessory);
+			}
+		}
+		if (Random.value < 0.5f)
+		{
+			string hair = GenerateHair();
+			if (hair != null)
+			{
+				SetHair(hair);
+			}
+		}
+		if (Random.value < (isHairSet ? 0.1f : 0.9f))
+		{
+			string hat = GenerateHat();
+			if (hat != null)
+			{
+				SetHat(hat);
+			}
+		}
+		if (Random.value < (isHatSet ? 0f : 0.5f))
+		{
+			string headAccessory = GenerateHeadAccessory();
+			if (headAccessory != null)
+			{
+				SetHeadAccessory(headAccessory);
+			}
+		}
 	}
 
 	private string GenerateBeard()
